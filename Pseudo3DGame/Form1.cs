@@ -1,0 +1,102 @@
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+
+//SCREAMING_SNAKE_CASE = constant
+//CamelCase = class
+//snake_case = variable
+
+namespace Pseudo3DGame
+{
+    public partial class Form1 : Form
+    {
+        Timer clock;
+        PictureBox f;
+
+        //Initialise settings
+        Settings game_settings = new Settings();
+
+        //Initialise Player
+        Player character;
+
+        //import map
+        Map game_map = new Map();
+
+        //Main function
+        public Form1()
+        {
+            character = new Player(game_settings);
+
+            //zet resolutie
+            this.Size = new Size(game_settings.WIDTH+16, game_settings.HEIGHT+39);
+
+            //Maak een game clock: 1 seconde delen door FPS
+            clock = new Timer();
+            clock.Interval = 1000 / game_settings.FPS;
+            clock.Tick += (sender, e) => GameUpdater();
+
+            //Maak veld aan (F van Field)
+            f = new PictureBox();
+            f.Size = new Size(game_settings.WIDTH, game_settings.HEIGHT);
+            int temp = 0;
+            f.Paint += (sender, e) => { temp += 1; DrawScreen(e, temp); };
+            Controls.Add(f);
+
+            //Start spel
+            clock.Start();
+
+            //Event Checker
+            this.KeyDown += (sender, e) => CheckControls(e);
+        }
+
+        public void GameUpdater()
+        {
+            f.Invalidate();
+        }
+
+        public void DrawScreen(PaintEventArgs e, int temp)
+        {
+            Graphics g = e.Graphics;
+            Pen B = new Pen(Color.Black, 2);
+
+            //Teken de map
+            for (int map_length = 0; map_length < game_map.map.GetLength(0); map_length++)
+            {
+                for (int map_width = 0; map_width < game_map.map.GetLength(1); map_width ++)
+                {
+                    if (game_map.map[map_length, map_width] == 1) g.DrawRectangle(B, new Rectangle(map_width*100, map_length*100, 100, 100));
+                }
+            }
+
+            PointF playerP = character.GetLoc();
+
+            g.DrawEllipse(B, new RectangleF(playerP.X - 5, playerP.Y - 5, 10, 10));
+            g.DrawLine(B, playerP.X, playerP.Y, playerP.X+(40 * (float)Math.Cos(character.GetAngle())), playerP.Y + (40*(float)Math.Sin(character.GetAngle())));
+
+            B.Dispose();
+        }
+
+        public void CheckControls(KeyEventArgs e)
+        {
+
+            if (e.KeyCode == Keys.Q) character.Left();
+            if (e.KeyCode == Keys.D) character.Right();
+            if (e.KeyCode == Keys.Z) character.Forward();
+            if (e.KeyCode == Keys.S) character.Back();
+            if (e.KeyCode == Keys.Right) character.TurnRight();
+            if (e.KeyCode == Keys.Left) character.TurnLeft();
+
+            if (e.KeyCode == Keys.Escape)
+            {
+                clock.Stop(); 
+                this.Close();
+            }
+        }
+    }
+}
