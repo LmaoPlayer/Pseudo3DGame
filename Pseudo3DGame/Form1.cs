@@ -26,6 +26,9 @@ namespace Pseudo3DGame
         //Initialise Player
         Player character;
 
+        //Initialise RayCasting
+        Raycasting rays;
+
         //import map
         Map game_map = new Map();
 
@@ -35,7 +38,8 @@ namespace Pseudo3DGame
         //Main function
         public Form1()
         {
-            character = new Player(game_settings);
+            character = new Player(game_settings, game_map);
+            rays = new Raycasting(game_settings, game_map);
 
             //zet resolutie
             this.Size = new Size(game_settings.WIDTH+16, game_settings.HEIGHT+39);
@@ -68,6 +72,8 @@ namespace Pseudo3DGame
 
         public void GameUpdater()
         {
+            rays.UpdateAngle(character.GetAngle());
+            rays.UpdateCoords(character.GetLoc(), character.GetMapLoc());
             f.Invalidate();
         }
 
@@ -75,6 +81,7 @@ namespace Pseudo3DGame
         {
             Graphics g = e.Graphics;
             Pen B = new Pen(Color.Black, 2);
+            Pen P = new Pen(Color.Yellow, 2);
 
             //Teken de map
             for (int map_length = 0; map_length < game_map.map.GetLength(0); map_length++)
@@ -83,12 +90,19 @@ namespace Pseudo3DGame
                 {
                     if (game_map.map[map_length, map_width] == 1) g.DrawRectangle(B, new Rectangle(map_width*100, map_length*100, 100, 100));
                 }
+
             }
 
             PointF playerP = character.GetLoc();
 
             g.DrawEllipse(B, new RectangleF(playerP.X - 5, playerP.Y - 5, 10, 10));
+            //Console.WriteLine(character.GetMapLoc());
             g.DrawLine(B, playerP.X, playerP.Y, playerP.X+(40 * (float)Math.Cos(character.GetAngle())), playerP.Y + (40*(float)Math.Sin(character.GetAngle())));
+
+            foreach (PointF t in rays.Draw())
+            {
+                g.DrawLine(P, playerP.X, playerP.Y, t.X, t.Y);
+            }
 
             B.Dispose();
             character.ResetDT();

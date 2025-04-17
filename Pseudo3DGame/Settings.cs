@@ -30,6 +30,13 @@ namespace Pseudo3DGame
         public float PLAYER_SPEED { get; }
         public float PLAYER_TURNING_SPEED { get; }
 
+        public double FOV { get; }
+        public double HALF_FOV { get; }
+        public int NUM_RAYS { get; }
+        public double HALF_NUM_RAYS { get; }
+        public double DELTA_ANGLE { get; }
+        public double MAX_DEPTH { get; }
+
 
         public Settings()
         {
@@ -40,10 +47,19 @@ namespace Pseudo3DGame
 
             this.Selected = KeyBoards.ZQSD;
 
-            this.PLAYER_START = new PointF(100F, 500);
+            this.PLAYER_START = new PointF(150, 500);
             this.PLAYER_ANGLE = 45;
             this.PLAYER_SPEED = 2F;
             this.PLAYER_TURNING_SPEED = 0.1F;
+
+            this.FOV = Math.PI/3;
+            this.HALF_FOV = FOV/2;
+            //this.NUM_RAYS = WIDTH/2;
+            this.NUM_RAYS = 3;
+            this.HALF_NUM_RAYS = NUM_RAYS/2;
+            this.DELTA_ANGLE = FOV/NUM_RAYS;
+            this.MAX_DEPTH = 5;
+
         }
     }
 }
