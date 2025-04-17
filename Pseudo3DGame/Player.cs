@@ -12,6 +12,8 @@ namespace Pseudo3DGame
         double x;
         double y;
         float angle;
+        //Delta time is nodig zodat de movement onafhankelijk is van de fps, en dus ook een afstand berekend wordt sinds de laatste frame.
+        int delta_time;
 
         Settings setting;
 
@@ -21,6 +23,8 @@ namespace Pseudo3DGame
             this.y = game_settings.PLAYER_START.Y;
             this.angle = game_settings.PLAYER_ANGLE;
             setting = game_settings;
+
+            this.delta_time = 1;
         }
 
         public PointF GetLoc()
@@ -40,36 +44,46 @@ namespace Pseudo3DGame
 
         public void Left()
         {
-            x += setting.PLAYER_SPEED * Math.Sin(angle);
-            y -= setting.PLAYER_SPEED * Math.Cos(angle);
+            x += setting.PLAYER_SPEED * Math.Sin(angle) * delta_time;
+            y -= setting.PLAYER_SPEED * Math.Cos(angle) * delta_time;
         }
 
         public void Right()
         {
-            x -= setting.PLAYER_SPEED * Math.Sin(angle);
-            y += setting.PLAYER_SPEED * Math.Cos(angle);
+            x -= setting.PLAYER_SPEED * Math.Sin(angle) * delta_time;
+            y += setting.PLAYER_SPEED * Math.Cos(angle) * delta_time;
         }
 
         public void Forward()
         {
-            x += setting.PLAYER_SPEED * Math.Cos(angle);
-            y += setting.PLAYER_SPEED * Math.Sin(angle);
+            x += setting.PLAYER_SPEED * Math.Cos(angle) * delta_time;
+            y += setting.PLAYER_SPEED * Math.Sin(angle) * delta_time;
         }
 
         public void Back()
         {
-            x -= setting.PLAYER_SPEED * Math.Cos(angle);
-            y -= setting.PLAYER_SPEED * Math.Sin(angle);
+            x -= setting.PLAYER_SPEED * Math.Cos(angle) * delta_time;
+            y -= setting.PLAYER_SPEED * Math.Sin(angle) * delta_time;
         }
 
         public void TurnRight()
         {
-            angle += setting.PLAYER_TURNING_SPEED;
+            angle += setting.PLAYER_TURNING_SPEED * delta_time;
         }
 
         public void TurnLeft()
         {
-            angle -= setting.PLAYER_TURNING_SPEED;
+            angle -= setting.PLAYER_TURNING_SPEED * delta_time;
+        }
+
+        public void ResetDT()
+        {
+            this.delta_time = 1;
+        }
+
+        public void IncreaseDT()
+        {
+            this.delta_time += 1;
         }
     }
 }

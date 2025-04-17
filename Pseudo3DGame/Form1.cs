@@ -17,6 +17,7 @@ namespace Pseudo3DGame
     public partial class Form1 : Form
     {
         Timer clock;
+
         PictureBox f;
 
         //Initialise settings
@@ -27,6 +28,9 @@ namespace Pseudo3DGame
 
         //import map
         Map game_map = new Map();
+
+        //Meerdere keys tergelijk
+        HashSet<Keys> pressed_keys = new HashSet<Keys>();
 
         //Main function
         public Form1()
@@ -45,14 +49,21 @@ namespace Pseudo3DGame
             f = new PictureBox();
             f.Size = new Size(game_settings.WIDTH, game_settings.HEIGHT);
             int temp = 0;
-            f.Paint += (sender, e) => { temp += 1; DrawScreen(e, temp); };
+            f.Paint += (sender, e) => {character.IncreaseDT(); temp += 1; DrawScreen(e, temp); };
             Controls.Add(f);
 
             //Start spel
             clock.Start();
 
             //Event Checker
-            this.KeyDown += (sender, e) => CheckControls(e);
+            this.KeyDown += (sender, e) => TestKeyDown(e);
+            this.KeyUp += (sender, e) => TestKeyUp(e);
+
+            //De delay van KeyDown weghalen
+            Timer input_timer = new Timer();
+            input_timer.Interval = 1000 / game_settings.FPS;
+            input_timer.Tick += (sender, e) => HandleKeys();
+            input_timer.Start();
         }
 
         public void GameUpdater()
@@ -80,23 +91,45 @@ namespace Pseudo3DGame
             g.DrawLine(B, playerP.X, playerP.Y, playerP.X+(40 * (float)Math.Cos(character.GetAngle())), playerP.Y + (40*(float)Math.Sin(character.GetAngle())));
 
             B.Dispose();
+            character.ResetDT();
         }
 
-        public void CheckControls(KeyEventArgs e)
+        private void TestKeyDown(KeyEventArgs e)
         {
-
-            if (e.KeyCode == Keys.Q) character.Left();
-            if (e.KeyCode == Keys.D) character.Right();
-            if (e.KeyCode == Keys.Z) character.Forward();
-            if (e.KeyCode == Keys.S) character.Back();
-            if (e.KeyCode == Keys.Right) character.TurnRight();
-            if (e.KeyCode == Keys.Left) character.TurnLeft();
-
             if (e.KeyCode == Keys.Escape)
             {
-                clock.Stop(); 
+                clock.Stop();
                 this.Close();
             }
+            else
+            {
+                pressed_keys.Add(e.KeyCode);
+                HandleKeys();
+            }
+                
+        }
+
+        private void TestKeyUp(KeyEventArgs e)
+        {
+            pressed_keys.Remove(e.KeyCode);
+        }
+
+        private void HandleKeys()
+        {
+            if (pressed_keys.Contains(Keys.W) && pressed_keys.Contains(Keys.ShiftKey))
+            {
+            }
+            else if (pressed_keys.Contains(Keys.W))
+            {
+            }
+            if (pressed_keys.Contains(Keys.Q)) character.Left();
+            if (pressed_keys.Contains(Keys.D)) character.Right();
+            if (pressed_keys.Contains(Keys.Z)) character.Forward();
+            if (pressed_keys.Contains(Keys.S)) character.Back();
+            if (pressed_keys.Contains(Keys.Right)) character.TurnRight();
+            if (pressed_keys.Contains(Keys.Left)) character.TurnLeft();
+
+            
         }
     }
 }

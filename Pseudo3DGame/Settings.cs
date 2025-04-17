@@ -33,7 +33,7 @@ namespace Pseudo3DGame
 
         public Settings()
         {
-            this.FPS = 60;
+            this.FPS = 120;
 
             this.WIDTH = 1600;
             this.HEIGHT = 900;
@@ -42,8 +42,8 @@ namespace Pseudo3DGame
 
             this.PLAYER_START = new PointF(100F, 500);
             this.PLAYER_ANGLE = 45;
-            this.PLAYER_SPEED = 4F;
-            this.PLAYER_TURNING_SPEED = 0.2F;
+            this.PLAYER_SPEED = 2F;
+            this.PLAYER_TURNING_SPEED = 0.1F;
         }
     }
 }
