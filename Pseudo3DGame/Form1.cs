@@ -89,35 +89,49 @@ namespace Pseudo3DGame
         public void DrawScreen(PaintEventArgs e, int temp)
         {
             Graphics g = e.Graphics;
-            Pen B = new Pen(Color.Black, 2);
-            Pen P = new Pen(Color.Yellow, 2);
+            Brush B = new SolidBrush(Color.Black);
+            Pen P = new Pen(Color.Black, 2);
+            Pen RayPen = new Pen(Color.Yellow, 2);
 
-            //Teken de map
-            for (int map_length = 0; map_length < game_map.map.GetLength(0); map_length++)
-            {
-                for (int map_width = 0; map_width < game_map.map.GetLength(1); map_width ++)
-                {
-                    if (game_map.map[map_length, map_width] == 1) g.DrawRectangle(B, new Rectangle(map_width*game_settings.PLAYER_MAP_SCALE, map_length* game_settings.PLAYER_MAP_SCALE, game_settings.PLAYER_MAP_SCALE, game_settings.PLAYER_MAP_SCALE));
-                }
+            //////!!2D Tekenen!!
+            ////Teken de map
+            //for (int map_length = 0; map_length < game_map.map.GetLength(0); map_length++)
+            //{
+            //    for (int map_width = 0; map_width < game_map.map.GetLength(1); map_width++)
+            //    {
+            //        if (game_map.map[map_length, map_width] == 1) g.DrawRectangle(P, new Rectangle(map_width * game_settings.PLAYER_MAP_SCALE, map_length * game_settings.PLAYER_MAP_SCALE, game_settings.PLAYER_MAP_SCALE, game_settings.PLAYER_MAP_SCALE));
+            //    }
 
-            }
+            //}
 
+            //PointF playerP = character.GetLoc();
+
+            //g.DrawEllipse(P, new RectangleF(playerP.X - 5, playerP.Y - 5, 10, 10));
+            ////Console.WriteLine(character.GetMapLoc());
+            //g.DrawLine(P, playerP.X, playerP.Y, playerP.X + (40 * (float)Math.Cos(character.GetAngle())), playerP.Y + (40 * (float)Math.Sin(character.GetAngle())));
+
+            //// draw every 4th ray: less lag
+            //int step = 4;
+            //var ray_points = rays.Draw2D();
+            //for (int i = 0; i < ray_points.Length; i += step)
+            //{
+            //    PointF hit = ray_points[i];
+            //    g.DrawLine(RayPen, playerP.X, playerP.Y, hit.X, hit.Y);
+            //}
+
+            //!!3D Tekenen!!
             PointF playerP = character.GetLoc();
+            Rectangle[] ray_points = rays.Draw3D();
 
-            g.DrawEllipse(B, new RectangleF(playerP.X - 5, playerP.Y - 5, 10, 10));
-            //Console.WriteLine(character.GetMapLoc());
-            g.DrawLine(B, playerP.X, playerP.Y, playerP.X+(40 * (float)Math.Cos(character.GetAngle())), playerP.Y + (40*(float)Math.Sin(character.GetAngle())));
-
-            int step = 4; // draw every 4th ray
-            var ray_points = rays.Draw();
-            for (int i = 0; i < ray_points.Length; i += step)
+            for (int i = 0; i < ray_points.Length; i++)
             {
-                PointF hit = ray_points[i];
-                g.DrawLine(P, playerP.X, playerP.Y, hit.X, hit.Y);
+                Rectangle hit = ray_points[i];
+                g.FillRectangle(B, hit);
             }
 
             B.Dispose();
             P.Dispose();
+            RayPen.Dispose();
         }
 
         private void TestKeyDown(KeyEventArgs e)
@@ -150,7 +164,11 @@ namespace Pseudo3DGame
             }
             if (pressed_keys.Contains(Keys.Q)) character.Left();
             if (pressed_keys.Contains(Keys.D)) character.Right();
-            if (pressed_keys.Contains(Keys.Z)) character.Forward();
+            if (pressed_keys.Contains(Keys.Z))
+            {
+                if (pressed_keys.Contains(Keys.ControlKey)) character.Forward(true);
+                else character.Forward(false);
+            }
             if (pressed_keys.Contains(Keys.S)) character.Back();
             if (pressed_keys.Contains(Keys.Right)) character.TurnRight();
             if (pressed_keys.Contains(Keys.Left)) character.TurnLeft();

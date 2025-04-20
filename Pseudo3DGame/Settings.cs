@@ -41,6 +41,7 @@ namespace Pseudo3DGame
         public double DIV_BY_ZERO_ERROR { get; }
 
         public double SCREEN_DIST { get; }
+        public double WALL_SCALE { get; }
 
 
         public Settings()
@@ -54,21 +55,23 @@ namespace Pseudo3DGame
 
             this.PLAYER_START = new PointF(150, 500);
             this.PLAYER_ANGLE = 45;
-            this.PLAYER_SPEED = 150F;
+            this.PLAYER_SPEED = 75F;
             this.PLAYER_TURNING_SPEED = 3F;
             this.PLAYER_MAP_SCALE = 100;
 
             this.FOV = Math.PI/3;
             this.HALF_FOV = FOV/2;
-            //this.NUM_RAYS = WIDTH/2;
-            this.NUM_RAYS = WIDTH/2;
+            this.NUM_RAYS = WIDTH / 2;
+            //this.NUM_RAYS = 100;
             this.HALF_NUM_RAYS = NUM_RAYS/2;
             this.DELTA_ANGLE = FOV/NUM_RAYS;
             this.MAX_DEPTH = 20;
 
             this.DIV_BY_ZERO_ERROR = 0.000001F;
 
-            
+            this.SCREEN_DIST = (WIDTH / 2) / (Math.Tan(HALF_FOV));
+            this.WALL_SCALE = WIDTH / NUM_RAYS;
+
         }
     }
 }

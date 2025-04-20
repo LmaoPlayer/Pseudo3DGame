@@ -18,6 +18,7 @@ namespace Pseudo3DGame
         double depth;
         double cos;
         double sin;
+        double projected_height;
 
         public Raycasting(Settings setting, Map map) 
         {
@@ -27,7 +28,24 @@ namespace Pseudo3DGame
             this.map_pos = new Point((int)Math.Floor(setting.PLAYER_START.X / setting.PLAYER_MAP_SCALE), (int)Math.Floor(setting.PLAYER_START.Y / setting.PLAYER_MAP_SCALE));
             this.map = map;
         }
-        private PointF RayCast(double ray_angle)
+        
+        public void UpdateAngle(double angle)
+        {
+            player_angle = angle;
+        }
+
+        public double GetProjHeight()
+        {
+            return projected_height;
+        }
+
+        public void UpdateCoords(PointF player_pos)
+        {
+            this.player_pos = player_pos;
+            this.map_pos = new Point((int)player_pos.X / setting.PLAYER_MAP_SCALE, (int)player_pos.Y/setting.PLAYER_MAP_SCALE);
+        }
+
+        private PointF RayCast3D(double ray_angle)
         {
             sin = Math.Sin(ray_angle);
             cos = Math.Cos(ray_angle);
@@ -46,8 +64,8 @@ namespace Pseudo3DGame
                 new_y = -1;
             }
 
-            double depth_hor = (y_hor - (player_pos.Y/setting.PLAYER_MAP_SCALE)) / sin;
-            double x_hor = (player_pos.X/setting.PLAYER_MAP_SCALE) + (depth_hor * cos);
+            double depth_hor = (y_hor - (player_pos.Y / setting.PLAYER_MAP_SCALE)) / sin;
+            double x_hor = (player_pos.X / setting.PLAYER_MAP_SCALE) + (depth_hor * cos);
 
             double new_depth = new_y / sin;
             double new_x = new_depth * cos;
@@ -84,7 +102,7 @@ namespace Pseudo3DGame
             }
 
             double depth_vert = (x_vert - (player_pos.X / setting.PLAYER_MAP_SCALE)) / cos;
-            double y_vert = (player_pos.Y/setting.PLAYER_MAP_SCALE) + (depth_vert * sin);
+            double y_vert = (player_pos.Y / setting.PLAYER_MAP_SCALE) + (depth_vert * sin);
 
             double v_new_depth = v_new_x / cos;
             double v_new_y = v_new_depth * sin;
@@ -106,24 +124,47 @@ namespace Pseudo3DGame
                 depth_vert += v_new_depth;
             }
             //Get the needed depth
-            depth = depth_vert < depth_hor?depth_vert:depth_hor;
+            depth = depth_vert < depth_hor ? depth_vert : depth_hor;
 
-            
+            projected_height = setting.SCREEN_DIST / (depth + setting.DIV_BY_ZERO_ERROR);
 
-            return new PointF(player_pos.X + setting.PLAYER_MAP_SCALE * (float)depth * (float)cos, player_pos.Y + setting.PLAYER_MAP_SCALE * (float)depth * (float)sin);
+            //return new PointF(player_pos.X + setting.PLAYER_MAP_SCALE * (float)depth * (float)cos, player_pos.Y + setting.PLAYER_MAP_SCALE * (float)depth * (float)sin);
+
+            //totale uitkomst wat er zou moeten getekend worden
+            return new PointF(
+                //(float)(ray_angle * setting.WALL_SCALE), 
+                (float)(setting.HEIGHT / 2 - (projected_height / 2)),
+                //(float)setting.WALL_SCALE, 
+                (float)projected_height);
         }
-        public void UpdateAngle(double angle)
+        public Rectangle[] Draw3D()
         {
-            player_angle = angle;
+            Rectangle[] temp = new Rectangle[setting.NUM_RAYS];
+            PointF temp_point;
+
+            double ray_angle = player_angle - setting.HALF_FOV + 0.0001;
+            for (int ray = 0; ray < setting.NUM_RAYS; ray++)
+            {
+                temp_point = RayCast3D(ray_angle);
+
+
+                //temp_point.Y = Math.Min(temp_point.Y, setting.HEIGHT*2);
+
+                temp[ray] = new Rectangle(
+                (int)(ray * setting.WALL_SCALE),
+                (int)temp_point.X, //(float)(setting.HEIGHT / 2 - (projected_height / 2)),
+                (int)setting.WALL_SCALE,
+                (int)temp_point.Y  //(float)projected_height)
+                );
+
+                ray_angle += setting.DELTA_ANGLE;
+            }
+
+            return temp;
         }
 
-        public void UpdateCoords(PointF player_pos)
-        {
-            this.player_pos = player_pos;
-            this.map_pos = new Point((int)player_pos.X / setting.PLAYER_MAP_SCALE, (int)player_pos.Y/setting.PLAYER_MAP_SCALE);
-        }
 
-        public PointF[] Draw()
+        public PointF[] Draw2D()
         {
             PointF[] temp = new PointF[setting.NUM_RAYS];
 
@@ -131,11 +172,96 @@ namespace Pseudo3DGame
             for (int ray = 0; ray < setting.NUM_RAYS; ray++)
             {
 
-                temp[ray] = RayCast(ray_angle);
+                temp[ray] = RayCast2D(ray_angle);
                 ray_angle += setting.DELTA_ANGLE;
             }
 
             return temp;
+        }
+        private PointF RayCast2D(double ray_angle)
+        {
+            sin = Math.Sin(ray_angle);
+            cos = Math.Cos(ray_angle);
+
+            //horizontal raycast
+            double y_hor;
+            double new_y;
+            if (sin > 0)
+            {
+                y_hor = map_pos.Y + 1;
+                new_y = 1;
+            }
+            else
+            {
+                y_hor = map_pos.Y - 0.00001F;
+                new_y = -1;
+            }
+
+            double depth_hor = (y_hor - (player_pos.Y / setting.PLAYER_MAP_SCALE)) / sin;
+            double x_hor = (player_pos.X / setting.PLAYER_MAP_SCALE) + (depth_hor * cos);
+
+            double new_depth = new_y / sin;
+            double new_x = new_depth * cos;
+
+            for (int i = 0; i < setting.MAX_DEPTH; i++)
+            {
+                Point tile_hor = new Point((int)x_hor, (int)y_hor);
+                if (tile_hor.X >= 0 && tile_hor.X < map.map.GetLength(1) && tile_hor.Y >= 0 && tile_hor.Y < map.map.GetLength(0))
+                {
+                    if (map.map[tile_hor.Y, tile_hor.X] == 1)
+                    {
+                        break;
+                    }
+                }
+                else { break; }
+
+                x_hor += new_x;
+                y_hor += new_y;
+                depth_hor += new_depth;
+            }
+
+            //vertical raycast
+            double x_vert;
+            double v_new_x = 0;
+            if (cos > 0)
+            {
+                x_vert = map_pos.X + 1;
+                v_new_x = 1;
+            }
+            else
+            {
+                x_vert = map_pos.X - 0.000001F;
+                v_new_x = -1;
+            }
+
+            double depth_vert = (x_vert - (player_pos.X / setting.PLAYER_MAP_SCALE)) / cos;
+            double y_vert = (player_pos.Y / setting.PLAYER_MAP_SCALE) + (depth_vert * sin);
+
+            double v_new_depth = v_new_x / cos;
+            double v_new_y = v_new_depth * sin;
+
+            for (int i = 0; i < setting.MAX_DEPTH; i++)
+            {
+                Point tile_vert = new Point((int)x_vert, (int)y_vert);
+                if (tile_vert.X >= 0 && tile_vert.X < map.map.GetLength(1) && tile_vert.Y >= 0 && tile_vert.Y < map.map.GetLength(0))
+                {
+                    if (map.map[tile_vert.Y, tile_vert.X] == 1)
+                    {
+                        break;
+                    }
+                }
+                else { break; }
+
+                x_vert += v_new_x;
+                y_vert += v_new_y;
+                depth_vert += v_new_depth;
+            }
+            //Get the needed depth
+            depth = depth_vert < depth_hor ? depth_vert : depth_hor;
+
+
+
+            return new PointF(player_pos.X + setting.PLAYER_MAP_SCALE * (float)depth * (float)cos, player_pos.Y + setting.PLAYER_MAP_SCALE * (float)depth * (float)sin);
         }
     }
 }

@@ -53,10 +53,13 @@ namespace Pseudo3DGame
             CheckWallCollision(tx, ty);
         }
 
-        public void Forward()
+        public void Forward(bool sprint)
         {
-            double tx = setting.PLAYER_SPEED * Math.Cos(angle) * delta_time;
-            double ty = setting.PLAYER_SPEED * Math.Sin(angle) * delta_time;
+            int speed_multiplier = 1;
+            if (sprint) speed_multiplier = 4;
+
+            double tx = setting.PLAYER_SPEED * Math.Cos(angle) * delta_time * speed_multiplier;
+            double ty = setting.PLAYER_SPEED * Math.Sin(angle) * delta_time * speed_multiplier;
             CheckWallCollision(tx, ty);
         }
 
