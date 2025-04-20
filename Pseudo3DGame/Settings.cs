@@ -61,8 +61,8 @@ namespace Pseudo3DGame
 
             this.FOV = Math.PI/3;
             this.HALF_FOV = FOV/2;
-            this.NUM_RAYS = WIDTH / 2;
-            //this.NUM_RAYS = 100;
+            //this.NUM_RAYS = WIDTH / 2;
+            this.NUM_RAYS = 100;
             this.HALF_NUM_RAYS = NUM_RAYS/2;
             this.DELTA_ANGLE = FOV/NUM_RAYS;
             this.MAX_DEPTH = 20;
