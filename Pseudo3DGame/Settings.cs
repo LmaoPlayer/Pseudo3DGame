@@ -29,6 +29,7 @@ namespace Pseudo3DGame
         public int PLAYER_ANGLE { get; }
         public float PLAYER_SPEED { get; }
         public float PLAYER_TURNING_SPEED { get; }
+        public int PLAYER_MAP_SCALE { get; }
 
         public double FOV { get; }
         public double HALF_FOV { get; }
@@ -37,10 +38,14 @@ namespace Pseudo3DGame
         public double DELTA_ANGLE { get; }
         public double MAX_DEPTH { get; }
 
+        public double DIV_BY_ZERO_ERROR { get; }
+
+        public double SCREEN_DIST { get; }
+
 
         public Settings()
         {
-            this.FPS = 120;
+            this.FPS = 30;
 
             this.WIDTH = 1600;
             this.HEIGHT = 900;
@@ -49,17 +54,21 @@ namespace Pseudo3DGame
 
             this.PLAYER_START = new PointF(150, 500);
             this.PLAYER_ANGLE = 45;
-            this.PLAYER_SPEED = 2F;
-            this.PLAYER_TURNING_SPEED = 0.1F;
+            this.PLAYER_SPEED = 150F;
+            this.PLAYER_TURNING_SPEED = 3F;
+            this.PLAYER_MAP_SCALE = 100;
 
             this.FOV = Math.PI/3;
             this.HALF_FOV = FOV/2;
             //this.NUM_RAYS = WIDTH/2;
-            this.NUM_RAYS = 3;
+            this.NUM_RAYS = WIDTH/2;
             this.HALF_NUM_RAYS = NUM_RAYS/2;
             this.DELTA_ANGLE = FOV/NUM_RAYS;
-            this.MAX_DEPTH = 5;
+            this.MAX_DEPTH = 20;
 
+            this.DIV_BY_ZERO_ERROR = 0.000001F;
+
+            
         }
     }
 }

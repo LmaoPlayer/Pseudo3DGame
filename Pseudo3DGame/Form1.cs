@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Diagnostics;
 
 //SCREAMING_SNAKE_CASE = constant
 //CamelCase = class
@@ -35,6 +36,9 @@ namespace Pseudo3DGame
         //Meerdere keys tergelijk
         HashSet<Keys> pressed_keys = new HashSet<Keys>();
 
+        //Delta_Time
+        Stopwatch stopwatch = new Stopwatch();
+
         //Main function
         public Form1()
         {
@@ -47,14 +51,17 @@ namespace Pseudo3DGame
             //Maak een game clock: 1 seconde delen door FPS
             clock = new Timer();
             clock.Interval = 1000 / game_settings.FPS;
-            clock.Tick += (sender, e) => GameUpdater();
+            clock.Tick += (sender, e) => { GameUpdater(); HandleKeys(); };
 
             //Maak veld aan (F van Field)
             f = new PictureBox();
             f.Size = new Size(game_settings.WIDTH, game_settings.HEIGHT);
             int temp = 0;
-            f.Paint += (sender, e) => {character.IncreaseDT(); temp += 1; DrawScreen(e, temp); };
+            f.Paint += (sender, e) => { DrawScreen(e, temp); };
             Controls.Add(f);
+
+            //DT
+            stopwatch.Start();
 
             //Start spel
             clock.Start();
@@ -63,19 +70,21 @@ namespace Pseudo3DGame
             this.KeyDown += (sender, e) => TestKeyDown(e);
             this.KeyUp += (sender, e) => TestKeyUp(e);
 
-            //De delay van KeyDown weghalen
-            Timer input_timer = new Timer();
-            input_timer.Interval = 1000 / game_settings.FPS;
-            input_timer.Tick += (sender, e) => HandleKeys();
-            input_timer.Start();
         }
 
         public void GameUpdater()
         {
             rays.UpdateAngle(character.GetAngle());
-            rays.UpdateCoords(character.GetLoc(), character.GetMapLoc());
+            rays.UpdateCoords(character.GetLoc());
+
+            double delta = stopwatch.Elapsed.TotalSeconds;
+            delta = Math.Min(delta, 0.1);
+            stopwatch.Restart();
+            character.UpdateDT(delta);
             f.Invalidate();
         }
+
+        
 
         public void DrawScreen(PaintEventArgs e, int temp)
         {
@@ -88,7 +97,7 @@ namespace Pseudo3DGame
             {
                 for (int map_width = 0; map_width < game_map.map.GetLength(1); map_width ++)
                 {
-                    if (game_map.map[map_length, map_width] == 1) g.DrawRectangle(B, new Rectangle(map_width*100, map_length*100, 100, 100));
+                    if (game_map.map[map_length, map_width] == 1) g.DrawRectangle(B, new Rectangle(map_width*game_settings.PLAYER_MAP_SCALE, map_length* game_settings.PLAYER_MAP_SCALE, game_settings.PLAYER_MAP_SCALE, game_settings.PLAYER_MAP_SCALE));
                 }
 
             }
@@ -99,13 +108,16 @@ namespace Pseudo3DGame
             //Console.WriteLine(character.GetMapLoc());
             g.DrawLine(B, playerP.X, playerP.Y, playerP.X+(40 * (float)Math.Cos(character.GetAngle())), playerP.Y + (40*(float)Math.Sin(character.GetAngle())));
 
-            foreach (PointF t in rays.Draw())
+            int step = 4; // draw every 4th ray
+            var ray_points = rays.Draw();
+            for (int i = 0; i < ray_points.Length; i += step)
             {
-                g.DrawLine(P, playerP.X, playerP.Y, t.X, t.Y);
+                PointF hit = ray_points[i];
+                g.DrawLine(P, playerP.X, playerP.Y, hit.X, hit.Y);
             }
 
             B.Dispose();
-            character.ResetDT();
+            P.Dispose();
         }
 
         private void TestKeyDown(KeyEventArgs e)

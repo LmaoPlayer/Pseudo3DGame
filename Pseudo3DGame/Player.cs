@@ -11,9 +11,9 @@ namespace Pseudo3DGame
     {
         double x;
         double y;
-        float angle;
+        double angle;
         //Delta time is nodig zodat de movement onafhankelijk is van de fps, en dus ook een afstand berekend wordt sinds de laatste frame.
-        int delta_time;
+        double delta_time;
         Map map;
 
         Settings setting;
@@ -34,12 +34,7 @@ namespace Pseudo3DGame
             return new PointF((float)x, (float)y);
         }
 
-        public Point GetMapLoc()
-        {
-            return new Point((int)x/100, (int)y/100);
-        }
-
-        public float GetAngle()
+        public double GetAngle()
         {
             return angle;
         }
@@ -80,27 +75,21 @@ namespace Pseudo3DGame
 
         public void TurnLeft()
         {
-            angle -= setting.PLAYER_TURNING_SPEED * delta_time;
-            angle %= 360;
+            angle -= (setting.PLAYER_TURNING_SPEED * delta_time) % 360;
         }
 
-        public void ResetDT()
+        public void UpdateDT(double deltaT)
         {
-            this.delta_time = 1;
-        }
-
-        public void IncreaseDT()
-        {
-            this.delta_time += 1;
+            this.delta_time = deltaT;
         }
 
         public void CheckWallCollision(double new_x, double new_y)
         {
-            if (map.map[(int)Math.Floor((y + new_y) / 100), (int)Math.Floor((x) / 100)] == 0)
+            if (map.map[(int)Math.Floor((y + new_y) / setting.PLAYER_MAP_SCALE), (int)Math.Floor((x) / setting.PLAYER_MAP_SCALE)] == 0)
             {
                 y += new_y;
             }
-            if (map.map[(int)Math.Floor((y) / 100), (int)Math.Floor((x + new_x) / 100)] == 0)
+            if (map.map[(int)Math.Floor((y) / setting.PLAYER_MAP_SCALE), (int)Math.Floor((x + new_x) / setting.PLAYER_MAP_SCALE)] == 0)
             {
                 x += new_x;
             }
