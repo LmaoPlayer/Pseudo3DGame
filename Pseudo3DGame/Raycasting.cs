@@ -25,7 +25,7 @@ namespace Pseudo3DGame
             this.setting = setting;
             this.player_angle = setting.PLAYER_ANGLE;
             this.player_pos = setting.PLAYER_START;
-            this.map_pos = new Point((int)Math.Floor(setting.PLAYER_START.X / setting.PLAYER_MAP_SCALE_X), (int)Math.Floor(setting.PLAYER_START.Y / setting.PLAYER_MAP_SCALE_Y));
+            this.map_pos = new Point((int)Math.Floor(setting.PLAYER_START.X / setting.PLAYER_MAP_SCALE), (int)Math.Floor(setting.PLAYER_START.Y / setting.PLAYER_MAP_SCALE));
             this.map = map;
         }
         
@@ -42,7 +42,7 @@ namespace Pseudo3DGame
         public void UpdateCoords(PointF player_pos)
         {
             this.player_pos = player_pos;
-            this.map_pos = new Point((int)player_pos.X / setting.PLAYER_MAP_SCALE_X, (int)player_pos.Y/setting.PLAYER_MAP_SCALE_Y);
+            this.map_pos = new Point((int)player_pos.X / setting.PLAYER_MAP_SCALE, (int)player_pos.Y/setting.PLAYER_MAP_SCALE);
         }
 
         private float[] RayCast3D(double ray_angle)
@@ -64,8 +64,8 @@ namespace Pseudo3DGame
                 new_y = -1;
             }
 
-            double depth_hor = (y_hor - (player_pos.Y / setting.PLAYER_MAP_SCALE_Y)) / sin;
-            double x_hor = (player_pos.X / setting.PLAYER_MAP_SCALE_X) + (depth_hor * cos);
+            double depth_hor = (y_hor - (player_pos.Y / setting.PLAYER_MAP_SCALE)) / sin;
+            double x_hor = (player_pos.X / setting.PLAYER_MAP_SCALE) + (depth_hor * cos);
 
             double new_depth = new_y / sin;
             double new_x = new_depth * cos;
@@ -101,8 +101,8 @@ namespace Pseudo3DGame
                 v_new_x = -1;
             }
 
-            double depth_vert = (x_vert - (player_pos.X / setting.PLAYER_MAP_SCALE_X)) / cos;
-            double y_vert = (player_pos.Y / setting.PLAYER_MAP_SCALE_Y) + (depth_vert * sin);
+            double depth_vert = (x_vert - (player_pos.X / setting.PLAYER_MAP_SCALE)) / cos;
+            double y_vert = (player_pos.Y / setting.PLAYER_MAP_SCALE) + (depth_vert * sin);
 
             double v_new_depth = v_new_x / cos;
             double v_new_y = v_new_depth * sin;
@@ -198,8 +198,8 @@ namespace Pseudo3DGame
                 new_y = -1;
             }
 
-            double depth_hor = (y_hor - (player_pos.Y / setting.PLAYER_MAP_SCALE_Y)) / sin;
-            double x_hor = (player_pos.X / setting.PLAYER_MAP_SCALE_X) + (depth_hor * cos);
+            double depth_hor = (y_hor - (player_pos.Y / setting.PLAYER_MAP_SCALE)) / sin;
+            double x_hor = (player_pos.X / setting.PLAYER_MAP_SCALE) + (depth_hor * cos);
 
             double new_depth = new_y / sin;
             double new_x = new_depth * cos;
@@ -235,8 +235,8 @@ namespace Pseudo3DGame
                 v_new_x = -1;
             }
 
-            double depth_vert = (x_vert - (player_pos.X / setting.PLAYER_MAP_SCALE_X)) / cos;
-            double y_vert = (player_pos.Y / setting.PLAYER_MAP_SCALE_Y) + (depth_vert * sin);
+            double depth_vert = (x_vert - (player_pos.X / setting.PLAYER_MAP_SCALE)) / cos;
+            double y_vert = (player_pos.Y / setting.PLAYER_MAP_SCALE) + (depth_vert * sin);
 
             double v_new_depth = v_new_x / cos;
             double v_new_y = v_new_depth * sin;
@@ -262,7 +262,7 @@ namespace Pseudo3DGame
 
 
 
-            return new PointF(player_pos.X + setting.PLAYER_MAP_SCALE_X * (float)depth * (float)cos, player_pos.Y + setting.PLAYER_MAP_SCALE_Y * (float)depth * (float)sin);
+            return new PointF(player_pos.X + setting.PLAYER_MAP_SCALE * (float)depth * (float)cos, player_pos.Y + setting.PLAYER_MAP_SCALE * (float)depth * (float)sin);
         }
     }
 }

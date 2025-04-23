@@ -39,6 +39,9 @@ namespace Pseudo3DGame
         //Delta_Time
         Stopwatch stopwatch = new Stopwatch();
 
+        //MousePointCheck
+        Point center;
+
         //Main function
         public Form1()
         {
@@ -71,6 +74,16 @@ namespace Pseudo3DGame
             this.KeyDown += (sender, e) => TestKeyDown(e);
             this.KeyUp += (sender, e) => TestKeyUp(e);
 
+            //Verstop de cursor
+            Cursor.Hide();
+
+            //Sla de center 1 keer op
+            center = this.PointToScreen(new Point(game_settings.WIDTH / 2, game_settings.HEIGHT / 2));
+
+            Timer mouse_timer = new Timer();
+            mouse_timer.Interval = 1;
+            mouse_timer.Tick += (sender, e) => MouseHandler();
+            mouse_timer.Start();
         }
 
         public void GameUpdater()
@@ -78,11 +91,15 @@ namespace Pseudo3DGame
             rays.UpdateAngle(character.GetAngle());
             rays.UpdateCoords(character.GetLoc());
 
+
+
             double delta = stopwatch.Elapsed.TotalSeconds;
             delta = Math.Min(delta, 0.1);
             stopwatch.Restart();
             character.UpdateDT(delta);
             f.Invalidate();
+
+            Cursor.Position = center;
         }
 
         
@@ -91,14 +108,14 @@ namespace Pseudo3DGame
         {
             Graphics g = e.Graphics;
             
-            Pen P = new Pen(Color.Black, 2);
+            SolidBrush P = new SolidBrush(Color.Black);
             Pen RayPen = new Pen(Color.Yellow, 2);
             SolidBrush BG = new SolidBrush(Color.FromArgb(255, 255, 255));
 
 
             g.FillRectangle(BG, 0, 0, game_settings.WIDTH, game_settings.HEIGHT);
             //Verander 2 naar 3 of omgekeerd voor manier van tekenen
-            Draw3D(g, P, RayPen);
+            Draw2D(g, P, RayPen);
 
 
             BG.Dispose();
@@ -106,23 +123,22 @@ namespace Pseudo3DGame
             RayPen.Dispose();
         }
 
-        private void Draw2D(Graphics g, Pen P, Pen RayPen)
+        private void Draw2D(Graphics g, Brush P, Pen RayPen)
         {
             //Teken de map
             for (int map_length = 0; map_length < game_map.map.GetLength(0); map_length++)
             {
                 for (int map_width = 0; map_width < game_map.map.GetLength(1); map_width++)
                 {
-                    if (game_map.map[map_length, map_width] == 1) g.DrawRectangle(P, new Rectangle(map_width * game_settings.PLAYER_MAP_SCALE_X, map_length * game_settings.PLAYER_MAP_SCALE_Y, game_settings.PLAYER_MAP_SCALE_X, game_settings.PLAYER_MAP_SCALE_Y));
+                    if (game_map.map[map_length, map_width] == 1) g.FillRectangle(P, new Rectangle(map_width * game_settings.PLAYER_MAP_SCALE, map_length * game_settings.PLAYER_MAP_SCALE, game_settings.PLAYER_MAP_SCALE, game_settings.PLAYER_MAP_SCALE));
                 }
 
             }
 
             PointF playerP = character.GetLoc();
 
-            g.DrawEllipse(P, new RectangleF(playerP.X - 5, playerP.Y - 5, 10, 10));
+            g.FillEllipse(P, new RectangleF(playerP.X - 5, playerP.Y - 5, 10, 10));
             //Console.WriteLine(character.GetMapLoc());
-            g.DrawLine(P, playerP.X, playerP.Y, playerP.X + (40 * (float)Math.Cos(character.GetAngle())), playerP.Y + (40 * (float)Math.Sin(character.GetAngle())));
 
             // draw every 4th ray: less lag
             int step = 4;
@@ -133,8 +149,7 @@ namespace Pseudo3DGame
                 g.DrawLine(RayPen, playerP.X, playerP.Y, hit.X, hit.Y);
             }
         }
-
-        private void Draw3D(Graphics g, Pen P, Pen RayPen)
+        private void Draw3D(Graphics g, Brush P, Pen RayPen)
         {
             
 
@@ -196,6 +211,12 @@ namespace Pseudo3DGame
             if (pressed_keys.Contains(Keys.Left)) character.TurnLeft();
 
             
+
+        }
+
+        private void MouseHandler()
+        {
+            character.Rotate((center.X - Cursor.Position.X)*0.5F);
         }
     }
 }

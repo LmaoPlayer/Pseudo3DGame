@@ -32,8 +32,7 @@ namespace Pseudo3DGame
         public int PLAYER_ANGLE { get; }
         public float PLAYER_SPEED { get; }
         public float PLAYER_TURNING_SPEED { get; }
-        public int PLAYER_MAP_SCALE_X { get; }
-        public int PLAYER_MAP_SCALE_Y { get; }
+        public int PLAYER_MAP_SCALE { get; }
 
         public double FOV { get; }
         public double HALF_FOV { get; }
@@ -50,21 +49,23 @@ namespace Pseudo3DGame
 
         public Settings()
         {
-            this.FPS = 30;
+            this.FPS = 60;
 
             this.WIDTH = 1600;
             this.HEIGHT = 900;
             this.MAP_WIDTH = 32;
-            this.MAP_HEIGHT = 18;
+
+            this.PLAYER_MAP_SCALE = WIDTH / MAP_WIDTH;
+            this.MAP_HEIGHT = MAP_WIDTH*HEIGHT/WIDTH;
 
             this.Selected = KeyBoards.ZQSD;
 
-            this.PLAYER_START = new PointF(150, 500);
+
+            this.PLAYER_START = new PointF(1.5F * PLAYER_MAP_SCALE, 1.5F * PLAYER_MAP_SCALE);
             this.PLAYER_ANGLE = 45;
             this.PLAYER_SPEED = 4.68F*MAP_HEIGHT;
-            this.PLAYER_TURNING_SPEED = 3F;
-            this.PLAYER_MAP_SCALE_X = WIDTH/MAP_WIDTH;
-            this.PLAYER_MAP_SCALE_Y = HEIGHT/MAP_HEIGHT;
+            this.PLAYER_TURNING_SPEED = 1F;
+            
 
             this.FOV = Math.PI/3;
             this.HALF_FOV = FOV/2;
@@ -72,7 +73,7 @@ namespace Pseudo3DGame
             //this.NUM_RAYS = 100;
             this.HALF_NUM_RAYS = NUM_RAYS/2;
             this.DELTA_ANGLE = FOV/NUM_RAYS;
-            this.MAX_DEPTH = 20;
+            this.MAX_DEPTH = 100;
 
             this.DIV_BY_ZERO_ERROR = 0.000001F;
 
