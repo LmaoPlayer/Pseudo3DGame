@@ -88,11 +88,11 @@ namespace Pseudo3DGame
 
         public void CheckWallCollision(double new_x, double new_y)
         {
-            if (map.map[(int)Math.Floor((y + new_y) / setting.PLAYER_MAP_SCALE), (int)Math.Floor((x) / setting.PLAYER_MAP_SCALE)] == 0)
+            if (map.map[(int)Math.Floor((y + new_y) / setting.PLAYER_MAP_SCALE_Y), (int)Math.Floor((x) / setting.PLAYER_MAP_SCALE_X)] == 0)
             {
                 y += new_y;
             }
-            if (map.map[(int)Math.Floor((y) / setting.PLAYER_MAP_SCALE), (int)Math.Floor((x + new_x) / setting.PLAYER_MAP_SCALE)] == 0)
+            if (map.map[(int)Math.Floor((y) / setting.PLAYER_MAP_SCALE_Y), (int)Math.Floor((x + new_x) / setting.PLAYER_MAP_SCALE_X)] == 0)
             {
                 x += new_x;
             }

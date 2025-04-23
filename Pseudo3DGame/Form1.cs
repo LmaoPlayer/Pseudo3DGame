@@ -31,7 +31,7 @@ namespace Pseudo3DGame
         Raycasting rays;
 
         //import map
-        Map game_map = new Map();
+        Map game_map;
 
         //Meerdere keys tergelijk
         HashSet<Keys> pressed_keys = new HashSet<Keys>();
@@ -42,6 +42,7 @@ namespace Pseudo3DGame
         //Main function
         public Form1()
         {
+            game_map = new Map(game_settings);
             character = new Player(game_settings, game_map);
             rays = new Raycasting(game_settings, game_map);
 
@@ -89,27 +90,30 @@ namespace Pseudo3DGame
         public void DrawScreen(PaintEventArgs e, int temp)
         {
             Graphics g = e.Graphics;
-            Brush B = new SolidBrush(Color.Black);
+            
             Pen P = new Pen(Color.Black, 2);
             Pen RayPen = new Pen(Color.Yellow, 2);
+            SolidBrush BG = new SolidBrush(Color.FromArgb(255, 255, 255));
 
+
+            g.FillRectangle(BG, 0, 0, game_settings.WIDTH, game_settings.HEIGHT);
             //Verander 2 naar 3 of omgekeerd voor manier van tekenen
-            Draw2D(g, P, RayPen, B);
+            Draw3D(g, P, RayPen);
 
 
-            B.Dispose();
+            BG.Dispose();
             P.Dispose();
             RayPen.Dispose();
         }
 
-        private void Draw2D(Graphics g, Pen P, Pen RayPen, Brush B)
+        private void Draw2D(Graphics g, Pen P, Pen RayPen)
         {
             //Teken de map
             for (int map_length = 0; map_length < game_map.map.GetLength(0); map_length++)
             {
                 for (int map_width = 0; map_width < game_map.map.GetLength(1); map_width++)
                 {
-                    if (game_map.map[map_length, map_width] == 1) g.DrawRectangle(P, new Rectangle(map_width * game_settings.PLAYER_MAP_SCALE, map_length * game_settings.PLAYER_MAP_SCALE, game_settings.PLAYER_MAP_SCALE, game_settings.PLAYER_MAP_SCALE));
+                    if (game_map.map[map_length, map_width] == 1) g.DrawRectangle(P, new Rectangle(map_width * game_settings.PLAYER_MAP_SCALE_X, map_length * game_settings.PLAYER_MAP_SCALE_Y, game_settings.PLAYER_MAP_SCALE_X, game_settings.PLAYER_MAP_SCALE_Y));
                 }
 
             }
@@ -130,15 +134,24 @@ namespace Pseudo3DGame
             }
         }
 
-        private void Draw3D(Graphics g, Pen P, Pen RayPen, Brush B)
+        private void Draw3D(Graphics g, Pen P, Pen RayPen)
         {
-            PointF playerP = character.GetLoc();
-            Rectangle[] ray_points = rays.Draw3D();
+            
 
-            for (int i = 0; i < ray_points.Length; i++)
+            PointF playerP = character.GetLoc();
+            float[,] ray_points = rays.Draw3D();
+
+            for (int i = 0; i < ray_points.GetLength(0); i++)
             {
-                Rectangle hit = ray_points[i];
-                g.FillRectangle(B, hit);
+                //Fog effect
+                int Col = Math.Abs((int)((Math.Pow(ray_points[i, 4], 5) / 255)*0.2F));
+                if (Col > 255) Col = 255;
+                Brush B = new SolidBrush(Color.FromArgb(Col, Col, Col));
+
+                //Teken de rechthoeken op de plaatsen waar de raycasts uitkomen
+                g.FillRectangle(B, ray_points[i, 0], ray_points[i, 1], ray_points[i, 2], ray_points[i, 3]);
+
+                B.Dispose();
             }
         }
 

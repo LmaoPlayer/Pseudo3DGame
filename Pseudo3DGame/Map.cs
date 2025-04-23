@@ -21,6 +21,20 @@ namespace Pseudo3DGame
             { 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1 },
             { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 }
         };
+
+
+        public Map(Settings setting)
+        {
+            int[,] tempMap = new int[setting.MAP_HEIGHT,setting.MAP_WIDTH];
+
+            for (int i = 0; i < setting.MAP_WIDTH; i++)
+            {
+                for (int j = 0; j < setting.MAP_HEIGHT; j++)
+                {
+
+                }
+            }
+        }
         
     }
 }
