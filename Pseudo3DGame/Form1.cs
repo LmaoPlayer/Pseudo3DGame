@@ -115,7 +115,7 @@ namespace Pseudo3DGame
 
             g.FillRectangle(BG, 0, 0, game_settings.WIDTH, game_settings.HEIGHT);
             //Verander 2 naar 3 of omgekeerd voor manier van tekenen
-            Draw2D(g, P, RayPen);
+            Draw3D(g, P, RayPen);
 
 
             BG.Dispose();
