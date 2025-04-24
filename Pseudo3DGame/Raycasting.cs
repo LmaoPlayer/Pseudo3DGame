@@ -133,8 +133,8 @@ namespace Pseudo3DGame
             //Hoogte van de muren in het 3D veld
             projected_height = setting.SCREEN_DIST / (depth + setting.DIV_BY_ZERO_ERROR);
 
-            //Muren die groter hoger dan het scherm worden geprojecteerd verkleinen we
-            projected_height = Math.Min(projected_height, setting.HEIGHT);
+            //Muren die groter dan het scherm zijn worden kleiner geprojecteerd
+            //projected_height = Math.Min(projected_height, setting.HEIGHT);
 
             //return new PointF(player_pos.X + setting.PLAYER_MAP_SCALE * (float)depth * (float)cos, player_pos.Y + setting.PLAYER_MAP_SCALE * (float)depth * (float)sin);
 

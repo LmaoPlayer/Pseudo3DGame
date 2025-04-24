@@ -12,6 +12,7 @@ namespace Pseudo3DGame
         double x;
         double y;
         double angle;
+        double vert_angle;
         //Delta time is nodig zodat de movement onafhankelijk is van de fps, en dus ook een afstand berekend wordt sinds de laatste frame.
         double delta_time;
         Map map;
@@ -27,6 +28,7 @@ namespace Pseudo3DGame
             this.map = game_map;
 
             this.delta_time = 1;
+            this.vert_angle = 0;
         }
 
         public PointF GetLoc()
@@ -37,6 +39,11 @@ namespace Pseudo3DGame
         public double GetAngle()
         {
             return angle;
+        }
+
+        public double GetVertAngle()
+        {
+            return vert_angle;
         }
 
         public void Left()
@@ -76,9 +83,16 @@ namespace Pseudo3DGame
             angle %= 360;
         }
 
-        public void Rotate(float MouseDist)
+        public void RotateLR(float MouseDist)
         {
             angle -= (setting.PLAYER_TURNING_SPEED * (MouseDist / 500)) % 360;
+        }
+
+        public void RotateUD(float MouseDist)
+        {
+            vert_angle += (setting.PLAYER_TURNING_SPEED * MouseDist);
+            if (vert_angle > 9 * setting.HEIGHT) vert_angle = 9 * setting.HEIGHT;
+            if (vert_angle < -9 * setting.HEIGHT) vert_angle = -9 * setting.HEIGHT;
         }
 
         public void TurnLeft()

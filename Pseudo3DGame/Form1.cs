@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Diagnostics;
+using static System.Windows.Forms.AxHost;
 
 //SCREAMING_SNAKE_CASE = constant
 //CamelCase = class
@@ -42,9 +43,15 @@ namespace Pseudo3DGame
         //MousePointCheck
         Point center;
 
+        //2D en 3D optie zonder de code aan te passen.
+        int dialog;
+
         //Main function
         public Form1()
         {
+            dialog = MessageBox.Show("Would you like the 3D preview?", "", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes ? 1 : 0;
+
+
             game_map = new Map(game_settings);
             character = new Player(game_settings, game_map);
             rays = new Raycasting(game_settings, game_map);
@@ -114,8 +121,10 @@ namespace Pseudo3DGame
 
 
             g.FillRectangle(BG, 0, 0, game_settings.WIDTH, game_settings.HEIGHT);
-            //Verander 2 naar 3 of omgekeerd voor manier van tekenen
-            Draw3D(g, P, RayPen);
+
+
+            if (dialog == 1) Draw3D(g);
+            else Draw2D(g, P, RayPen);
 
 
             BG.Dispose();
@@ -136,12 +145,14 @@ namespace Pseudo3DGame
             }
 
             PointF playerP = character.GetLoc();
+            float player_angle = (float)(character.GetAngle()*Math.PI/180);
 
             g.FillEllipse(P, new RectangleF(playerP.X - 5, playerP.Y - 5, 10, 10));
             //Console.WriteLine(character.GetMapLoc());
 
             // draw every 4th ray: less lag
-            int step = 4;
+            //int step = 4;
+            int step = 1;
             var ray_points = rays.Draw2D();
             for (int i = 0; i < ray_points.Length; i += step)
             {
@@ -149,12 +160,12 @@ namespace Pseudo3DGame
                 g.DrawLine(RayPen, playerP.X, playerP.Y, hit.X, hit.Y);
             }
         }
-        private void Draw3D(Graphics g, Brush P, Pen RayPen)
-        {
-            
 
-            PointF playerP = character.GetLoc();
+            
+        private void Draw3D(Graphics g)
+        {
             float[,] ray_points = rays.Draw3D();
+            double vert_angle = character.GetVertAngle();
 
             for (int i = 0; i < ray_points.GetLength(0); i++)
             {
@@ -164,9 +175,17 @@ namespace Pseudo3DGame
                 Brush B = new SolidBrush(Color.FromArgb(Col, Col, Col));
 
                 //Teken de rechthoeken op de plaatsen waar de raycasts uitkomen
-                g.FillRectangle(B, ray_points[i, 0], ray_points[i, 1], ray_points[i, 2], ray_points[i, 3]);
+                g.FillRectangle(B, ray_points[i, 0], ray_points[i, 1]+(float)vert_angle, ray_points[i, 2], ray_points[i, 3]);
+
+
 
                 B.Dispose();
+            }
+
+            using (Pen p = new Pen(Color.Gray))
+            {
+                g.DrawLine(p, game_settings.WIDTH / 2 - 5, game_settings.HEIGHT / 2, game_settings.WIDTH / 2 + 5, game_settings.HEIGHT /2);
+                g.DrawLine(p, game_settings.WIDTH / 2, game_settings.HEIGHT / 2 - 5, game_settings.WIDTH / 2, game_settings.HEIGHT / 2 + 5);
             }
         }
 
@@ -216,7 +235,9 @@ namespace Pseudo3DGame
 
         private void MouseHandler()
         {
-            character.Rotate((center.X - Cursor.Position.X)*0.5F);
+            character.RotateLR((center.X - Cursor.Position.X)*0.5F);
+
+            if (dialog == 1) character.RotateUD((center.Y - Cursor.Position.Y) * 0.5F);
         }
     }
 }
