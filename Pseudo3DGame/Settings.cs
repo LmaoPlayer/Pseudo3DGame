@@ -45,7 +45,8 @@ namespace Pseudo3DGame
 
         public double SCREEN_DIST { get; }
         public double WALL_SCALE { get; }
-
+        
+        public int TEXTURE_SIZE { get; }
 
         public Settings()
         {
@@ -80,6 +81,7 @@ namespace Pseudo3DGame
             this.SCREEN_DIST = (WIDTH/2) / (Math.Tan(HALF_FOV));
             this.WALL_SCALE = WIDTH / NUM_RAYS;
 
+            this.TEXTURE_SIZE = 256;
         }
     }
 }

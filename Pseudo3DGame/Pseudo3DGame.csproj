@@ -54,6 +54,7 @@
     </Compile>
     <Compile Include="Map.cs" />
     <Compile Include="ObjectRenderer.cs" />
+    <Compile Include="PictureEditorToCorrectSize.cs" />
     <Compile Include="Player.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

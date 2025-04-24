@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Diagnostics;
 using static System.Windows.Forms.AxHost;
+using System.IO;
 
 //SCREAMING_SNAKE_CASE = constant
 //CamelCase = class
@@ -46,18 +47,36 @@ namespace Pseudo3DGame
         //2D en 3D optie zonder de code aan te passen.
         int dialog;
 
+        PictureEditorToCorrectSize wall;
+
         //Main function
         public Form1()
         {
+            //Debug met 2D
             dialog = MessageBox.Show("Would you like the 3D preview?", "", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes ? 1 : 0;
 
-
+            //setup
             game_map = new Map(game_settings);
             character = new Player(game_settings, game_map);
             rays = new Raycasting(game_settings, game_map);
 
             //zet resolutie
             this.Size = new Size(game_settings.WIDTH+16, game_settings.HEIGHT+39);
+
+            //Test met meerdere achtervoegsels
+            Image tempwall;
+            try
+            {
+                 tempwall = Image.FromFile("Textures/Wall.jpg");
+            }
+            catch (FileNotFoundException)
+            {
+                 tempwall = Image.FromFile("Textures/Wall.png");
+            }
+            
+
+            //Laad de images.
+            wall = new PictureEditorToCorrectSize(game_settings, tempwall);
 
             //Maak een game clock: 1 seconde delen door FPS
             clock = new Timer();
