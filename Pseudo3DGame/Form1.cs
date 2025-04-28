@@ -71,9 +71,16 @@ namespace Pseudo3DGame
             }
             catch (FileNotFoundException)
             {
-                 tempwall = Image.FromFile("Textures/Wall.png");
+                try
+                {
+                    tempwall = Image.FromFile("Textures/Wall.jpeg");
+                }
+                catch (FileNotFoundException)
+                {
+                    tempwall = Image.FromFile("Textures/Wall.png");
+                }
             }
-            
+
 
             //Laad de images.
             wall = new PictureEditorToCorrectSize(game_settings, tempwall);
@@ -183,6 +190,7 @@ namespace Pseudo3DGame
             
         private void Draw3D(Graphics g)
         {
+            Bitmap bmp = wall.GetBMP();
             float[,] ray_points = rays.Draw3D();
             double vert_angle = character.GetVertAngle();
 
@@ -194,7 +202,10 @@ namespace Pseudo3DGame
                 Brush B = new SolidBrush(Color.FromArgb(Col, Col, Col));
 
                 //Teken de rechthoeken op de plaatsen waar de raycasts uitkomen
-                g.FillRectangle(B, ray_points[i, 0], ray_points[i, 1]+(float)vert_angle, ray_points[i, 2], ray_points[i, 3]);
+                //g.FillRectangle(B, ray_points[i, 0], ray_points[i, 1]+(float)vert_angle, ray_points[i, 2], ray_points[i, 3]);
+                Bitmap SavedWallPiece = bmp.Clone(new Rectangle(0, 0, (int)ray_points[i, 2], 256), bmp.PixelFormat);
+
+                g.DrawImage(SavedWallPiece, new RectangleF(ray_points[i, 0], ray_points[i, 1] + (float)vert_angle, ray_points[i, 2], ray_points[i, 3]*2));
 
 
 
@@ -247,8 +258,10 @@ namespace Pseudo3DGame
             if (pressed_keys.Contains(Keys.S)) character.Back();
             if (pressed_keys.Contains(Keys.Right)) character.TurnRight();
             if (pressed_keys.Contains(Keys.Left)) character.TurnLeft();
+            if (pressed_keys.Contains(Keys.Up)) character.RotateUD(30);
+            if (pressed_keys.Contains(Keys.Down)) character.RotateUD(-30);
 
-            
+
 
         }
 

@@ -44,6 +44,8 @@ namespace Pseudo3DGame
                     colors.Clear();
                 }
             }
+
+            this.CorrectImg = temp;
         }
 
         private Color AverageColor(List<Color> colors)
@@ -68,6 +70,9 @@ namespace Pseudo3DGame
                 sumB / count
             );
         }
-
+        public Bitmap GetBMP()
+        {
+            return CorrectImg;
+        }
     }
 }
