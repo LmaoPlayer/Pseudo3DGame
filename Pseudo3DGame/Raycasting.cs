@@ -126,6 +126,18 @@ namespace Pseudo3DGame
             //Get the needed depth
             depth = depth_vert < depth_hor ? depth_vert : depth_hor;
 
+            float offset = 0;
+
+            if (depth_vert < depth_hor)
+            {
+                if (cos < 0) offset = 1 - ((float)y_vert % 1);
+                else if (cos > 0) offset = ((float)y_vert % 1);
+            }
+            else
+            {
+                if (sin > 0) offset = 1 - ((float)x_hor % 1);
+                else if (sin < 0) offset = ((float)x_hor % 1);
+            }
 
             //Verwijder het FishBowl effect: muren worden bol als je dicht komt staan
             depth *= Math.Cos(player_angle-ray_angle);
@@ -138,11 +150,12 @@ namespace Pseudo3DGame
 
             //return new PointF(player_pos.X + setting.PLAYER_MAP_SCALE * (float)depth * (float)cos, player_pos.Y + setting.PLAYER_MAP_SCALE * (float)depth * (float)sin);
 
-            return new float[]{ (float)(setting.HEIGHT / 2 - (projected_height / 2)), (float)projected_height, (float)depth };
+
+            return new float[]{ (float)(setting.HEIGHT / 2 - (projected_height / 2)), (float)projected_height, (float)depth, offset };
         }
         public float[,] Draw3D()
         {
-            float[,] temp = new float[setting.NUM_RAYS, 5];
+            float[,] temp = new float[setting.NUM_RAYS, 6];
             float[] temp_point;
 
             double ray_angle = player_angle - setting.HALF_FOV + 0.0001;
@@ -158,6 +171,7 @@ namespace Pseudo3DGame
                 temp[ray, 2] = (float)setting.WALL_SCALE;
                 temp[ray, 3] = (float)temp_point[1]; //(float)projected_height)
                 temp[ray, 4] = temp_point[2]; //depth
+                temp[ray, 5] = temp_point[3];
 
                 ray_angle += setting.DELTA_ANGLE;
             }

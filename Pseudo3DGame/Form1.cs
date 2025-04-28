@@ -197,19 +197,20 @@ namespace Pseudo3DGame
             for (int i = 0; i < ray_points.GetLength(0); i++)
             {
                 //Fog effect
-                int Col = Math.Abs((int)((Math.Pow(ray_points[i, 4], 5) / 255)*0.2F));
-                if (Col > 255) Col = 255;
-                Brush B = new SolidBrush(Color.FromArgb(Col, Col, Col));
+                //int Col = Math.Abs((int)((Math.Pow(ray_points[i, 4], 5) / 255)*0.2F));
+                //if (Col > 255) Col = 255;
+                //Brush B = new SolidBrush(Color.FromArgb(Col, Col, Col));
 
                 //Teken de rechthoeken op de plaatsen waar de raycasts uitkomen
                 //g.FillRectangle(B, ray_points[i, 0], ray_points[i, 1]+(float)vert_angle, ray_points[i, 2], ray_points[i, 3]);
-                Bitmap SavedWallPiece = bmp.Clone(new Rectangle(0, 0, (int)ray_points[i, 2], 256), bmp.PixelFormat);
+                int sliceX = Math.Min((int)(ray_points[i, 5] * game_settings.TEXTURE_SIZE), game_settings.TEXTURE_SIZE - (int)ray_points[i, 2]);
+                Bitmap SavedWallPiece = bmp.Clone(new Rectangle(sliceX, 0, (int)ray_points[i, 2], bmp.Height), bmp.PixelFormat);
 
-                g.DrawImage(SavedWallPiece, new RectangleF(ray_points[i, 0], ray_points[i, 1] + (float)vert_angle, ray_points[i, 2], ray_points[i, 3]*2));
+                g.DrawImage(SavedWallPiece, new RectangleF(ray_points[i, 0], ray_points[i, 1] + (float)vert_angle, ray_points[i, 2], ray_points[i, 3]));
 
 
 
-                B.Dispose();
+                //B.Dispose();
             }
 
             using (Pen p = new Pen(Color.Gray))
@@ -260,9 +261,6 @@ namespace Pseudo3DGame
             if (pressed_keys.Contains(Keys.Left)) character.TurnLeft();
             if (pressed_keys.Contains(Keys.Up)) character.RotateUD(30);
             if (pressed_keys.Contains(Keys.Down)) character.RotateUD(-30);
-
-
-
         }
 
         private void MouseHandler()
