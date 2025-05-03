@@ -67,7 +67,7 @@ namespace Pseudo3DGame
             Image tempwall;
             try
             {
-                 tempwall = Image.FromFile("Textures/Wall.jpg");
+                 tempwall = Image.FromFile("Textures/Wall.png");
             }
             catch (FileNotFoundException)
             {
@@ -77,7 +77,7 @@ namespace Pseudo3DGame
                 }
                 catch (FileNotFoundException)
                 {
-                    tempwall = Image.FromFile("Textures/Wall.png");
+                    tempwall = Image.FromFile("Textures/Wall.jpg");
                 }
             }
 

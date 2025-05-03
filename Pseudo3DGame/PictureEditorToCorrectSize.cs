@@ -14,38 +14,39 @@ namespace Pseudo3DGame
         public PictureEditorToCorrectSize(Settings setting, Image img)
         {
             Bitmap input = new Bitmap(img);
-            Bitmap temp = new Bitmap(setting.TEXTURE_SIZE, setting.TEXTURE_SIZE);
-            
-            int pixel_scale_width = (int)img.Width / setting.TEXTURE_SIZE;
-            int pixel_scale_height = (int)img.Width / setting.TEXTURE_SIZE;
+            //Bitmap temp = new Bitmap(setting.TEXTURE_SIZE, setting.TEXTURE_SIZE);
 
-            List<Color> colors = new List<Color>();
+            //int pixel_scale_width = (int)img.Width / setting.TEXTURE_SIZE;
+            //int pixel_scale_height = (int)img.Width / setting.TEXTURE_SIZE;
 
-            for (int i = 0;  i < setting.TEXTURE_SIZE; i++)
-            {
-                for (int j = 0; j < setting.TEXTURE_SIZE; j++)
-                {
-                    
+            //List<Color> colors = new List<Color>();
 
-                    for (int k = 0; k < pixel_scale_height; k++)
-                    {
-                        for (int l = 0; l < pixel_scale_width; l++)
-                        {
-                            int x = (i * pixel_scale_height) + l;
-                            int y = (j * pixel_scale_width) + k;
+            //for (int i = 0;  i < setting.TEXTURE_SIZE; i++)
+            //{
+            //    for (int j = 0; j < setting.TEXTURE_SIZE; j++)
+            //    {
 
-                            if (x > temp.Width || y > temp.Height) break;
-                            colors.Add(input.GetPixel(x, y));
-                        }
-                    }
 
-                    temp.SetPixel(i, j, AverageColor(colors));
+            //        for (int k = 0; k < pixel_scale_height; k++)
+            //        {
+            //            for (int l = 0; l < pixel_scale_width; l++)
+            //            {
+            //                int x = (i * pixel_scale_height) + l;
+            //                int y = (j * pixel_scale_width) + k;
 
-                    colors.Clear();
-                }
-            }
+            //                if (x > temp.Width || y > temp.Height) break;
+            //                colors.Add(input.GetPixel(x, y));
+            //            }
+            //        }
 
-            this.CorrectImg = temp;
+            //        temp.SetPixel(i, j, AverageColor(colors));
+
+            //        colors.Clear();
+            //    }
+            //}
+
+            //this.CorrectImg = temp;
+            this.CorrectImg = input;
         }
 
         private Color AverageColor(List<Color> colors)
