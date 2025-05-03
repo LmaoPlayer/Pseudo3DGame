@@ -204,12 +204,11 @@ namespace Pseudo3DGame
                 //Teken de rechthoeken op de plaatsen waar de raycasts uitkomen
                 //g.FillRectangle(B, ray_points[i, 0], ray_points[i, 1]+(float)vert_angle, ray_points[i, 2], ray_points[i, 3]);
                 int sliceX = Math.Min((int)(ray_points[i, 5] * game_settings.TEXTURE_SIZE), game_settings.TEXTURE_SIZE - (int)ray_points[i, 2]);
-                Bitmap SavedWallPiece = bmp.Clone(new Rectangle(sliceX, 0, (int)ray_points[i, 2], bmp.Height), bmp.PixelFormat);
 
+                int sliceY = 0;
+                
+                Bitmap SavedWallPiece = bmp.Clone(new Rectangle(sliceX, sliceY, (int)ray_points[i, 2], bmp.Height), bmp.PixelFormat);
                 g.DrawImage(SavedWallPiece, new RectangleF(ray_points[i, 0], ray_points[i, 1] + (float)vert_angle, ray_points[i, 2], ray_points[i, 3]));
-
-
-
                 //B.Dispose();
             }
 

@@ -14,6 +14,9 @@ namespace Pseudo3DGame
         public PictureEditorToCorrectSize(Settings setting, Image img)
         {
             Bitmap input = new Bitmap(img);
+
+
+            //Stuk code om images te rescalen als ze te groot/klein zijn. Dit moet nog goed afgewerkt worden.
             //Bitmap temp = new Bitmap(setting.TEXTURE_SIZE, setting.TEXTURE_SIZE);
 
             //int pixel_scale_width = (int)img.Width / setting.TEXTURE_SIZE;
