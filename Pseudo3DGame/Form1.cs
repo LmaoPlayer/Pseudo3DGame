@@ -47,7 +47,7 @@ namespace Pseudo3DGame
         //2D en 3D optie zonder de code aan te passen.
         int dialog;
 
-        PictureEditorToCorrectSize wall;
+        PictureEditorToCorrectSize[] walls;
 
         //Main function
         public Form1()
@@ -64,26 +64,44 @@ namespace Pseudo3DGame
             this.Size = new Size(game_settings.WIDTH+16, game_settings.HEIGHT+39);
 
             //Test met meerdere achtervoegsels
-            Image tempwall;
+            Image tempwall1;
             try
             {
-                 tempwall = Image.FromFile("Textures/Wall.png");
+                 tempwall1 = Image.FromFile("Textures/wall1.png");
             }
             catch (FileNotFoundException)
             {
                 try
                 {
-                    tempwall = Image.FromFile("Textures/Wall.jpeg");
+                    tempwall1 = Image.FromFile("Textures/wall1.jpeg");
                 }
                 catch (FileNotFoundException)
                 {
-                    tempwall = Image.FromFile("Textures/Wall.jpg");
+                    tempwall1 = Image.FromFile("Textures/wall1.jpg");
+                }
+            }
+
+            Image tempwall2;
+            try
+            {
+                tempwall2 = Image.FromFile("Textures/wall2.png");
+            }
+            catch (FileNotFoundException)
+            {
+                try
+                {
+                    tempwall2 = Image.FromFile("Textures/wall2.jpeg");
+                }
+                catch (FileNotFoundException)
+                {
+                    tempwall2 = Image.FromFile("Textures/wall2.jpg");
                 }
             }
 
 
+
             //Laad de images.
-            wall = new PictureEditorToCorrectSize(game_settings, tempwall);
+            walls = new PictureEditorToCorrectSize[] { new PictureEditorToCorrectSize(game_settings, tempwall1), new PictureEditorToCorrectSize(game_settings, tempwall2), new PictureEditorToCorrectSize(game_settings, Image.FromFile("Textures/Wall3.png")) };
 
             //Maak een game clock: 1 seconde delen door FPS
             clock = new Timer();
@@ -190,7 +208,7 @@ namespace Pseudo3DGame
             
         private void Draw3D(Graphics g)
         {
-            Bitmap bmp = wall.GetBMP();
+            Bitmap bmp = walls[2].GetBMP();
             float[,] ray_points = rays.Draw3D();
             double vert_angle = character.GetVertAngle();
 
