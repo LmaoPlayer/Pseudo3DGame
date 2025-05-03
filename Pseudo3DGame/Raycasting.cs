@@ -50,7 +50,10 @@ namespace Pseudo3DGame
             sin = Math.Sin(ray_angle);
             cos = Math.Cos(ray_angle);
 
+
+
             //horizontal raycast
+            int wall_picture_hor = 0;
             double y_hor;
             double new_y;
             if (sin > 0)
@@ -75,8 +78,9 @@ namespace Pseudo3DGame
                 Point tile_hor = new Point((int)x_hor, (int)y_hor);
                 if (tile_hor.X >= 0 && tile_hor.X < map.map.GetLength(1) && tile_hor.Y >= 0 && tile_hor.Y < map.map.GetLength(0))
                 {
-                    if (map.map[tile_hor.Y, tile_hor.X] == 1)
+                    if (map.map[tile_hor.Y, tile_hor.X] != 0)
                     {
+                        wall_picture_hor = map.map[tile_hor.Y, tile_hor.X] - 1;
                         break;
                     }
                 }
@@ -88,6 +92,7 @@ namespace Pseudo3DGame
             }
 
             //vertical raycast
+            int wall_picture_ver = 0;
             double x_vert;
             double v_new_x = 0;
             if (cos > 0)
@@ -112,8 +117,9 @@ namespace Pseudo3DGame
                 Point tile_vert = new Point((int)x_vert, (int)y_vert);
                 if (tile_vert.X >= 0 && tile_vert.X < map.map.GetLength(1) && tile_vert.Y >= 0 && tile_vert.Y < map.map.GetLength(0))
                 {
-                    if (map.map[tile_vert.Y, tile_vert.X] == 1)
+                    if (map.map[tile_vert.Y, tile_vert.X] != 0)
                     {
+                        wall_picture_ver = map.map[tile_vert.Y, tile_vert.X] - 1;
                         break;
                     }
                 }
@@ -128,15 +134,19 @@ namespace Pseudo3DGame
 
             float offset = 0;
 
+            int wall_pic = 0;
+
             if (depth_vert < depth_hor)
             {
                 if (cos < 0) offset = 1 - ((float)y_vert % 1);
                 else if (cos > 0) offset = ((float)y_vert % 1);
+                wall_pic = wall_picture_ver;
             }
             else
             {
                 if (sin > 0) offset = 1 - ((float)x_hor % 1);
                 else if (sin < 0) offset = ((float)x_hor % 1);
+                wall_pic = wall_picture_hor;
             }
 
             //Verwijder het FishBowl effect: muren worden bol als je dicht komt staan
@@ -151,11 +161,11 @@ namespace Pseudo3DGame
             //return new PointF(player_pos.X + setting.PLAYER_MAP_SCALE * (float)depth * (float)cos, player_pos.Y + setting.PLAYER_MAP_SCALE * (float)depth * (float)sin);
 
 
-            return new float[]{ (float)(setting.HEIGHT / 2 - (projected_height / 2)), (float)projected_height, (float)depth, offset };
+            return new float[]{ (float)(setting.HEIGHT / 2 - (projected_height / 2)), (float)projected_height, (float)depth, offset, wall_pic };
         }
         public float[,] Draw3D()
         {
-            float[,] temp = new float[setting.NUM_RAYS, 6];
+            float[,] temp = new float[setting.NUM_RAYS, 7];
             float[] temp_point;
 
             double ray_angle = player_angle - setting.HALF_FOV + 0.0001;
@@ -172,6 +182,7 @@ namespace Pseudo3DGame
                 temp[ray, 3] = (float)temp_point[1]; //(float)projected_height)
                 temp[ray, 4] = temp_point[2]; //depth
                 temp[ray, 5] = temp_point[3];
+                temp[ray, 6] = temp_point[4];
 
                 ray_angle += setting.DELTA_ANGLE;
             }
@@ -223,7 +234,7 @@ namespace Pseudo3DGame
                 Point tile_hor = new Point((int)x_hor, (int)y_hor);
                 if (tile_hor.X >= 0 && tile_hor.X < map.map.GetLength(1) && tile_hor.Y >= 0 && tile_hor.Y < map.map.GetLength(0))
                 {
-                    if (map.map[tile_hor.Y, tile_hor.X] == 1)
+                    if (map.map[tile_hor.Y, tile_hor.X] != 0)
                     {
                         break;
                     }
@@ -260,7 +271,7 @@ namespace Pseudo3DGame
                 Point tile_vert = new Point((int)x_vert, (int)y_vert);
                 if (tile_vert.X >= 0 && tile_vert.X < map.map.GetLength(1) && tile_vert.Y >= 0 && tile_vert.Y < map.map.GetLength(0))
                 {
-                    if (map.map[tile_vert.Y, tile_vert.X] == 1)
+                    if (map.map[tile_vert.Y, tile_vert.X] != 0)
                     {
                         break;
                     }

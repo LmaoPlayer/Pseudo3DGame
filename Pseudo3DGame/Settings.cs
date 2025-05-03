@@ -52,9 +52,9 @@ namespace Pseudo3DGame
         {
             this.FPS = 60;
 
-            this.WIDTH = 1200;
-            this.HEIGHT = 600;
-            this.MAP_WIDTH = 20;
+            this.WIDTH = 1800;
+            this.HEIGHT = 1000;
+            this.MAP_WIDTH = 36;
 
             this.PLAYER_MAP_SCALE = WIDTH / MAP_WIDTH;
             this.MAP_HEIGHT = MAP_WIDTH*HEIGHT/WIDTH;

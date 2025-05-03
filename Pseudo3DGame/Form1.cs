@@ -62,6 +62,7 @@ namespace Pseudo3DGame
 
             //zet resolutie
             this.Size = new Size(game_settings.WIDTH+16, game_settings.HEIGHT+39);
+            this.Location = new Point((Screen.PrimaryScreen.Bounds.Width-this.Width)/2, (Screen.PrimaryScreen.Bounds.Height - this.Height) / 2);
 
             //Test met meerdere achtervoegsels
             Image tempwall1;
@@ -183,7 +184,7 @@ namespace Pseudo3DGame
             {
                 for (int map_width = 0; map_width < game_map.map.GetLength(1); map_width++)
                 {
-                    if (game_map.map[map_length, map_width] == 1) g.FillRectangle(P, new Rectangle(map_width * game_settings.PLAYER_MAP_SCALE, map_length * game_settings.PLAYER_MAP_SCALE, game_settings.PLAYER_MAP_SCALE, game_settings.PLAYER_MAP_SCALE));
+                    if (game_map.map[map_length, map_width] != 0) g.FillRectangle(P, new Rectangle(map_width * game_settings.PLAYER_MAP_SCALE, map_length * game_settings.PLAYER_MAP_SCALE, game_settings.PLAYER_MAP_SCALE, game_settings.PLAYER_MAP_SCALE));
                 }
 
             }
@@ -195,8 +196,8 @@ namespace Pseudo3DGame
             //Console.WriteLine(character.GetMapLoc());
 
             // draw every 4th ray: less lag
-            //int step = 4;
-            int step = 1;
+            int step = 4;
+            //int step = 1;
             var ray_points = rays.Draw2D();
             for (int i = 0; i < ray_points.Length; i += step)
             {
@@ -208,7 +209,7 @@ namespace Pseudo3DGame
             
         private void Draw3D(Graphics g)
         {
-            Bitmap bmp = walls[2].GetBMP();
+            Bitmap[] bmp = new Bitmap[] { walls[0].GetBMP(), walls[1].GetBMP(), walls[2].GetBMP() };
             float[,] ray_points = rays.Draw3D();
             double vert_angle = character.GetVertAngle();
 
@@ -224,8 +225,9 @@ namespace Pseudo3DGame
                 int sliceX = Math.Min((int)(ray_points[i, 5] * game_settings.TEXTURE_SIZE), game_settings.TEXTURE_SIZE - (int)ray_points[i, 2]);
 
                 int sliceY = 0;
-                
-                Bitmap SavedWallPiece = bmp.Clone(new Rectangle(sliceX, sliceY, (int)ray_points[i, 2], bmp.Height), bmp.PixelFormat);
+
+                Bitmap SavedWallPiece = bmp[(int)ray_points[i, 6]].Clone(new Rectangle(sliceX, sliceY, (int)ray_points[i, 2], bmp[(int)ray_points[i, 6]].Height), bmp[(int)ray_points[i, 6]].PixelFormat);
+                //Bitmap SavedWallPiece = bmp[0].Clone(new Rectangle(sliceX, sliceY, (int)ray_points[i, 2], bmp[0].Height), bmp[0].PixelFormat);
                 g.DrawImage(SavedWallPiece, new RectangleF(ray_points[i, 0], ray_points[i, 1] + (float)vert_angle, ray_points[i, 2], ray_points[i, 3]));
                 //B.Dispose();
             }

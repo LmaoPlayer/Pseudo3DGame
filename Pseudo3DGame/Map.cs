@@ -13,8 +13,8 @@ namespace Pseudo3DGame
         {
             { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
             { 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1 },
-            { 1, 0, 0, 1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 0, 1 },
-            { 1, 0, 0, 1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 1 },
+            { 1, 0, 0, 3, 2, 3, 3, 0, 2, 0, 1, 1, 1, 0, 0, 1 },
+            { 1, 0, 0, 1, 0, 0, 0, 0, 2, 0, 1, 0, 0, 0, 0, 1 },
             { 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 1, 1, 0, 0, 1 },
             { 1, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 },
             { 1, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 },
@@ -32,10 +32,13 @@ namespace Pseudo3DGame
             {
                 for (int j = 0; j < setting.MAP_WIDTH; j++)
                 {
-                    if (j == 0) tempMap[i, j] = 1;
-                    else if (i == 0) tempMap[i, j] = 1;
-                    else if (j == setting.MAP_WIDTH - 1) tempMap[i, j] = 1;
-                    else if (i == setting.MAP_HEIGHT - 1) tempMap[i, j] = 1;
+                    int t = rnd.Next(1, 4);
+
+
+                    if (j == 0) tempMap[i, j] = t;
+                    else if (i == 0) tempMap[i, j] = t;
+                    else if (j == setting.MAP_WIDTH - 1) tempMap[i, j] = t;
+                    else if (i == setting.MAP_HEIGHT - 1) tempMap[i, j] = t;
                     else if (j == 1 && i == 1) tempMap[i, j] = 0;
                     else
                     {
@@ -43,7 +46,7 @@ namespace Pseudo3DGame
 
                         if (tempNum == 5)
                         {
-                            tempMap[i, j] = 1;
+                            tempMap[i, j] = t;
                         } 
                     }
                 }
