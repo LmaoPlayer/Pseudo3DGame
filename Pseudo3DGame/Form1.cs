@@ -244,7 +244,7 @@ namespace Pseudo3DGame
             PointF playerP = character.GetLoc();
             float player_angle = (float)(character.GetAngle()*Math.PI/180);
 
-            g.FillEllipse(P[0], new RectangleF(playerP.X - 5, playerP.Y - 5, 10, 10));
+            g.FillEllipse(P[0], new RectangleF(playerP.X - game_settings.MINIMUM_WALL_PLAYER_DISTANCE, playerP.Y - game_settings.MINIMUM_WALL_PLAYER_DISTANCE, game_settings.MINIMUM_WALL_PLAYER_DISTANCE*2, game_settings.MINIMUM_WALL_PLAYER_DISTANCE*2));
             //Console.WriteLine(character.GetMapLoc());
 
             // draw every 4th ray: less lag
