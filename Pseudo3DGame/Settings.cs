@@ -48,12 +48,12 @@ namespace Pseudo3DGame
         
         public int TEXTURE_SIZE { get; }
 
-        public Settings()
+        public Settings(int width, int height)
         {
             this.FPS = 60;
 
-            this.WIDTH = 1800;
-            this.HEIGHT = 1000;
+            this.WIDTH = width;
+            this.HEIGHT = height;
             this.MAP_WIDTH = 36;
 
             this.PLAYER_MAP_SCALE = WIDTH / MAP_WIDTH;

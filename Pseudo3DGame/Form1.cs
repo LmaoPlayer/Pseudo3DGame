@@ -24,7 +24,7 @@ namespace Pseudo3DGame
         PictureBox f;
 
         //Initialise settings
-        Settings game_settings = new Settings();
+        Settings game_settings;
 
         //Initialise Player
         Player character;
@@ -55,14 +55,18 @@ namespace Pseudo3DGame
             //Debug met 2D
             dialog = MessageBox.Show("Would you like the 3D preview?", "", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes ? 1 : 0;
 
+            this.WindowState = FormWindowState.Maximized;
+            game_settings = new Settings(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height);
+
             //setup
             game_map = new Map(game_settings);
             character = new Player(game_settings, game_map);
             rays = new Raycasting(game_settings, game_map);
 
-            //zet resolutie
-            this.Size = new Size(game_settings.WIDTH+16, game_settings.HEIGHT+39);
-            this.Location = new Point((Screen.PrimaryScreen.Bounds.Width-this.Width)/2, (Screen.PrimaryScreen.Bounds.Height - this.Height) / 2);
+            //zet resulotie als grootte van form
+            //this.Size = new Size(game_settings.WIDTH+16, game_settings.HEIGHT+39);
+            //this.CenterToScreen();
+            //this.Location = new Point((Screen.PrimaryScreen.Bounds.Width-this.Width)/2, (Screen.PrimaryScreen.Bounds.Height - this.Height) / 2);
 
             //Test met meerdere achtervoegsels
             Image tempwall1;
@@ -186,7 +190,6 @@ namespace Pseudo3DGame
                 {
                     if (game_map.map[map_length, map_width] != 0) g.FillRectangle(P, new Rectangle(map_width * game_settings.PLAYER_MAP_SCALE, map_length * game_settings.PLAYER_MAP_SCALE, game_settings.PLAYER_MAP_SCALE, game_settings.PLAYER_MAP_SCALE));
                 }
-
             }
 
             PointF playerP = character.GetLoc();
