@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Pseudo3DGame
 {
-    internal class ObjectRenderer
+    internal class SettingsMenu
     {
     }
 }

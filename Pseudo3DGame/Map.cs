@@ -40,6 +40,9 @@ namespace Pseudo3DGame
                     else if (j == setting.MAP_WIDTH - 1) tempMap[i, j] = t;
                     else if (i == setting.MAP_HEIGHT - 1) tempMap[i, j] = t;
                     else if (j == 1 && i == 1) tempMap[i, j] = 0;
+                    else if (j == 2 && i == 1) tempMap[i, j] = 0;
+                    else if (j == 1 && i == 2) tempMap[i, j] = 0;
+                    else if (j == 2 && i == 2) tempMap[i, j] = 0;
                     else
                     {
                         int tempNum = rnd.Next(0, 6);

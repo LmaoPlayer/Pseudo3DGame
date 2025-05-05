@@ -48,7 +48,6 @@ namespace Pseudo3DGame
         public double WALL_SCALE { get; }
         
         public int TEXTURE_SIZE { get; }
-        
 
         public Settings(int width, int height)
         {
@@ -56,7 +55,7 @@ namespace Pseudo3DGame
 
             this.WIDTH = width;
             this.HEIGHT = height;
-            this.MAP_WIDTH = 36;
+            this.MAP_WIDTH = 40;
 
             this.PLAYER_MAP_SCALE = WIDTH / MAP_WIDTH;
             this.MAP_HEIGHT = MAP_WIDTH*HEIGHT/WIDTH;
@@ -66,7 +65,7 @@ namespace Pseudo3DGame
 
             this.PLAYER_START = new PointF(1.5F * PLAYER_MAP_SCALE, 1.5F * PLAYER_MAP_SCALE);
             this.PLAYER_ANGLE = 45;
-            this.PLAYER_SPEED = 4.68F*MAP_HEIGHT;
+            this.PLAYER_SPEED = 100/(MAP_HEIGHT/10);
             this.PLAYER_TURNING_SPEED = 1F;
             
 

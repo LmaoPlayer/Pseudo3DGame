@@ -248,8 +248,8 @@ namespace Pseudo3DGame
             //Console.WriteLine(character.GetMapLoc());
 
             // draw every 4th ray: less lag
-            int step = 4;
-            //int step = 1;
+            //int step = 4;
+            int step = 1;
             var ray_points = rays.Draw2D();
             for (int i = 0; i < ray_points.Length; i += step)
             {
