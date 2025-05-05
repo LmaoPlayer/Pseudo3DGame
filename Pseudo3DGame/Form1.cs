@@ -152,39 +152,16 @@ namespace Pseudo3DGame
 
 
             //Button setup
+            Panel Menu = new Panel();
+
+            EscapeMenu esc = new EscapeMenu(game_settings, Menu);
+            Controls.Add(Menu);
+            
 
 
-            Font font = new Font("Serif", (int)(game_settings.HEIGHT / 200) * 5, FontStyle.Bold);
 
 
-
-
-            Resume = new Button();
-            Resume.Size = new Size((game_settings.WIDTH / 7) * 2, (game_settings.HEIGHT / 10));
-            Resume.Location = new Point((game_settings.WIDTH / 14) * 5, (game_settings.HEIGHT / 20) * 5);
-            Resume.Click += (sender, e) => PauzeFunction();
-            Resume.Text = "Continue";
-            Resume.Font = font;
-
-            Resume.Hide();
-            Controls.Add(Resume);
-
-            Settings = new Button();
-            Settings.Size = new Size((game_settings.WIDTH / 7) * 2, (game_settings.HEIGHT / 10));
-            Settings.Location = new Point((game_settings.WIDTH / 14) * 5, (game_settings.HEIGHT / 20) * 9);
-            Settings.Text = "Settings";
-            Settings.Font = font;
-            Settings.Hide();
-            Controls.Add(Settings);
-
-            Quit = new Button();
-            Quit.Size = new Size((game_settings.WIDTH / 7) * 2, (game_settings.HEIGHT / 10));
-            Quit.Location = new Point((game_settings.WIDTH / 14) * 5, (game_settings.HEIGHT / 20) * 13);
-            Quit.Click += (sender, e) => { clock.Stop(); Exit(); };
-            Quit.Text = "Quit Game";
-            Quit.Font = font;
-            Quit.Hide();
-            Controls.Add(Quit);
+            
 
             f.SendToBack();
         }
@@ -227,7 +204,7 @@ namespace Pseudo3DGame
 
             if (Paused)
             {
-                g.FillRectangle(new SolidBrush(Color.LightCoral), game_settings.WIDTH / 3, game_settings.HEIGHT / 5, game_settings.WIDTH / 3, (game_settings.HEIGHT / 5)*3);
+                
             }
         }
         private void Draw2D(Graphics g, Brush[] P, Pen RayPen)
@@ -341,19 +318,11 @@ namespace Pseudo3DGame
                 Cursor.Show();
                 f.Invalidate();
 
-                Resume.Show();
-                Settings.Show();
-                Quit.Show();
-
             }
             else
             {
                 clock.Start();
                 Cursor.Hide();
-
-                Resume.Hide();
-                Settings.Hide();
-                Quit.Hide();
             }
         }
         private void Exit()
