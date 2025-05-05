@@ -107,13 +107,34 @@ namespace Pseudo3DGame
 
         public void CheckWallCollision(double new_x, double new_y)
         {
-            if (map.map[(int)Math.Floor((y + new_y) / setting.PLAYER_MAP_SCALE), (int)Math.Floor((x) / setting.PLAYER_MAP_SCALE)] == 0)
+            if (new_y > 0)
             {
-                y += new_y;
+                if (map.map[(int)Math.Floor((y + new_y + setting.MINIMUM_WALL_PLAYER_DISTANCE) / setting.PLAYER_MAP_SCALE), (int)Math.Floor((x) / setting.PLAYER_MAP_SCALE)] == 0)
+                {
+                    y += new_y;
+                }
             }
-            if (map.map[(int)Math.Floor((y) / setting.PLAYER_MAP_SCALE), (int)Math.Floor((x + new_x) / setting.PLAYER_MAP_SCALE)] == 0)
+            else
             {
-                x += new_x;
+                if (map.map[(int)Math.Floor((y + new_y - setting.MINIMUM_WALL_PLAYER_DISTANCE) / setting.PLAYER_MAP_SCALE), (int)Math.Floor((x) / setting.PLAYER_MAP_SCALE)] == 0)
+                {
+                    y += new_y;
+                }
+            }
+
+            if (new_x > 0)
+            {
+                if (map.map[(int)Math.Floor((y) / setting.PLAYER_MAP_SCALE), (int)Math.Floor((x + new_x + setting.MINIMUM_WALL_PLAYER_DISTANCE) / setting.PLAYER_MAP_SCALE)] == 0)
+                {
+                    x += new_x;
+                }
+            }
+            else
+            {
+                if (map.map[(int)Math.Floor((y) / setting.PLAYER_MAP_SCALE), (int)Math.Floor((x + new_x - setting.MINIMUM_WALL_PLAYER_DISTANCE) / setting.PLAYER_MAP_SCALE)] == 0)
+                {
+                    x += new_x;
+                }
             }
         }
     }

@@ -49,6 +49,14 @@ namespace Pseudo3DGame
 
         PictureEditorToCorrectSize[] walls;
 
+        bool EnableHair = false;
+
+        bool Paused = false;
+
+        Button Resume;
+        Button Settings;
+        Button Quit;
+
         //Main function
         public Form1()
         {
@@ -56,6 +64,7 @@ namespace Pseudo3DGame
             dialog = MessageBox.Show("Would you like the 3D preview?", "", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes ? 1 : 0;
 
             this.WindowState = FormWindowState.Maximized;
+            FormBorderStyle = FormBorderStyle.None;
             game_settings = new Settings(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height);
 
             //setup
@@ -72,7 +81,7 @@ namespace Pseudo3DGame
             Image tempwall1;
             try
             {
-                 tempwall1 = Image.FromFile("Textures/wall1.png");
+                tempwall1 = Image.FromFile("Textures/wall1.png");
             }
             catch (FileNotFoundException)
             {
@@ -102,8 +111,6 @@ namespace Pseudo3DGame
                     tempwall2 = Image.FromFile("Textures/wall2.jpg");
                 }
             }
-
-
 
             //Laad de images.
             walls = new PictureEditorToCorrectSize[] { new PictureEditorToCorrectSize(game_settings, tempwall1), new PictureEditorToCorrectSize(game_settings, tempwall2), new PictureEditorToCorrectSize(game_settings, Image.FromFile("Textures/Wall3.png")) };
@@ -140,14 +147,53 @@ namespace Pseudo3DGame
             mouse_timer.Interval = 1;
             mouse_timer.Tick += (sender, e) => MouseHandler();
             mouse_timer.Start();
-        }
 
+
+
+
+            //Button setup
+
+
+            Font font = new Font("Serif", (int)(game_settings.HEIGHT / 200) * 5, FontStyle.Bold);
+
+
+
+
+            Resume = new Button();
+            Resume.Size = new Size((game_settings.WIDTH / 7) * 2, (game_settings.HEIGHT / 10));
+            Resume.Location = new Point((game_settings.WIDTH / 14) * 5, (game_settings.HEIGHT / 20) * 5);
+            Resume.Click += (sender, e) => PauzeFunction();
+            Resume.Text = "Continue";
+            Resume.Font = font;
+
+            Resume.Hide();
+            Controls.Add(Resume);
+
+            Settings = new Button();
+            Settings.Size = new Size((game_settings.WIDTH / 7) * 2, (game_settings.HEIGHT / 10));
+            Settings.Location = new Point((game_settings.WIDTH / 14) * 5, (game_settings.HEIGHT / 20) * 9);
+            Settings.Text = "Settings";
+            Settings.Font = font;
+            Settings.Hide();
+            Controls.Add(Settings);
+
+            Quit = new Button();
+            Quit.Size = new Size((game_settings.WIDTH / 7) * 2, (game_settings.HEIGHT / 10));
+            Quit.Location = new Point((game_settings.WIDTH / 14) * 5, (game_settings.HEIGHT / 20) * 13);
+            Quit.Click += (sender, e) => { clock.Stop(); Exit(); };
+            Quit.Text = "Quit Game";
+            Quit.Font = font;
+            Quit.Hide();
+            Controls.Add(Quit);
+
+            f.SendToBack();
+        }
         public void GameUpdater()
         {
             rays.UpdateAngle(character.GetAngle());
             rays.UpdateCoords(character.GetLoc());
 
-
+            this.Focus();
 
             double delta = stopwatch.Elapsed.TotalSeconds;
             delta = Math.Min(delta, 0.1);
@@ -155,47 +201,50 @@ namespace Pseudo3DGame
             character.UpdateDT(delta);
             f.Invalidate();
 
-            Cursor.Position = center;
+            if (!Paused) Cursor.Position = center;
         }
-
-        
-
         public void DrawScreen(PaintEventArgs e, int temp)
         {
             Graphics g = e.Graphics;
-            
-            SolidBrush P = new SolidBrush(Color.Black);
+
+            SolidBrush[] P = { new SolidBrush(Color.Black), new SolidBrush(Color.Red), new SolidBrush(Color.Blue) };
             Pen RayPen = new Pen(Color.Yellow, 2);
             SolidBrush BG = new SolidBrush(Color.FromArgb(255, 255, 255));
 
 
             g.FillRectangle(BG, 0, 0, game_settings.WIDTH, game_settings.HEIGHT);
 
-
             if (dialog == 1) Draw3D(g);
             else Draw2D(g, P, RayPen);
 
+            //Draw an annoying hair
+            if (EnableHair) g.DrawBezier(new Pen(Color.Black), new Point(200, 200), new Point(210, 200), new Point(210, 210), new Point(210, 230));
 
             BG.Dispose();
-            P.Dispose();
             RayPen.Dispose();
-        }
 
-        private void Draw2D(Graphics g, Brush P, Pen RayPen)
+
+
+            if (Paused)
+            {
+                g.FillRectangle(new SolidBrush(Color.LightCoral), game_settings.WIDTH / 3, game_settings.HEIGHT / 5, game_settings.WIDTH / 3, (game_settings.HEIGHT / 5)*3);
+            }
+        }
+        private void Draw2D(Graphics g, Brush[] P, Pen RayPen)
         {
             //Teken de map
             for (int map_length = 0; map_length < game_map.map.GetLength(0); map_length++)
             {
                 for (int map_width = 0; map_width < game_map.map.GetLength(1); map_width++)
                 {
-                    if (game_map.map[map_length, map_width] != 0) g.FillRectangle(P, new Rectangle(map_width * game_settings.PLAYER_MAP_SCALE, map_length * game_settings.PLAYER_MAP_SCALE, game_settings.PLAYER_MAP_SCALE, game_settings.PLAYER_MAP_SCALE));
+                    if (game_map.map[map_length, map_width] != 0) g.FillRectangle(P[game_map.map[map_length, map_width]-1], new Rectangle(map_width * game_settings.PLAYER_MAP_SCALE, map_length * game_settings.PLAYER_MAP_SCALE, game_settings.PLAYER_MAP_SCALE, game_settings.PLAYER_MAP_SCALE));
                 }
             }
 
             PointF playerP = character.GetLoc();
             float player_angle = (float)(character.GetAngle()*Math.PI/180);
 
-            g.FillEllipse(P, new RectangleF(playerP.X - 5, playerP.Y - 5, 10, 10));
+            g.FillEllipse(P[0], new RectangleF(playerP.X - 5, playerP.Y - 5, 10, 10));
             //Console.WriteLine(character.GetMapLoc());
 
             // draw every 4th ray: less lag
@@ -207,9 +256,7 @@ namespace Pseudo3DGame
                 PointF hit = ray_points[i];
                 g.DrawLine(RayPen, playerP.X, playerP.Y, hit.X, hit.Y);
             }
-        }
-
-            
+        } 
         private void Draw3D(Graphics g)
         {
             Bitmap[] bmp = new Bitmap[] { walls[0].GetBMP(), walls[1].GetBMP(), walls[2].GetBMP() };
@@ -241,55 +288,77 @@ namespace Pseudo3DGame
                 g.DrawLine(p, game_settings.WIDTH / 2, game_settings.HEIGHT / 2 - 5, game_settings.WIDTH / 2, game_settings.HEIGHT / 2 + 5);
             }
         }
-
-
         private void TestKeyDown(KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Escape)
             {
-                clock.Stop();
-                this.Close();
+                PauzeFunction();
             }
             else
             {
                 pressed_keys.Add(e.KeyCode);
                 HandleKeys();
             }
-                
         }
-
         private void TestKeyUp(KeyEventArgs e)
         {
             pressed_keys.Remove(e.KeyCode);
         }
-
         private void HandleKeys()
         {
-            if (pressed_keys.Contains(Keys.W) && pressed_keys.Contains(Keys.ShiftKey))
+            if (!Paused)
             {
+                if (pressed_keys.Contains(Keys.Q)) character.Left();
+                if (pressed_keys.Contains(Keys.D)) character.Right();
+                if (pressed_keys.Contains(Keys.Z))
+                {
+                    if (pressed_keys.Contains(Keys.ControlKey)) character.Forward(true);
+                    else character.Forward(false);
+                }
+                if (pressed_keys.Contains(Keys.S)) character.Back();
+                if (pressed_keys.Contains(Keys.Right)) character.TurnRight();
+                if (pressed_keys.Contains(Keys.Left)) character.TurnLeft();
+                if (pressed_keys.Contains(Keys.Up)) character.RotateUD(30);
+                if (pressed_keys.Contains(Keys.Down)) character.RotateUD(-30);
             }
-            else if (pressed_keys.Contains(Keys.W))
-            {
-            }
-            if (pressed_keys.Contains(Keys.Q)) character.Left();
-            if (pressed_keys.Contains(Keys.D)) character.Right();
-            if (pressed_keys.Contains(Keys.Z))
-            {
-                if (pressed_keys.Contains(Keys.ControlKey)) character.Forward(true);
-                else character.Forward(false);
-            }
-            if (pressed_keys.Contains(Keys.S)) character.Back();
-            if (pressed_keys.Contains(Keys.Right)) character.TurnRight();
-            if (pressed_keys.Contains(Keys.Left)) character.TurnLeft();
-            if (pressed_keys.Contains(Keys.Up)) character.RotateUD(30);
-            if (pressed_keys.Contains(Keys.Down)) character.RotateUD(-30);
+            if (!EnableHair && pressed_keys.Contains(Keys.R) && pressed_keys.Contains(Keys.P) && pressed_keys.Contains(Keys.Enter)) EnableHair = true;
         }
-
         private void MouseHandler()
         {
-            character.RotateLR((center.X - Cursor.Position.X)*0.5F);
+            if (!Paused)
+            {
+                character.RotateLR((center.X - Cursor.Position.X) * 0.5F);
 
-            if (dialog == 1) character.RotateUD((center.Y - Cursor.Position.Y) * 0.5F);
+                if (dialog == 1) character.RotateUD((center.Y - Cursor.Position.Y) * 0.5F);
+            }
+        }
+        private void PauzeFunction()
+        {
+            Paused = !Paused;
+            if (Paused)
+            {
+                clock.Stop();
+                Cursor.Show();
+                f.Invalidate();
+
+                Resume.Show();
+                Settings.Show();
+                Quit.Show();
+
+            }
+            else
+            {
+                clock.Start();
+                Cursor.Hide();
+
+                Resume.Hide();
+                Settings.Hide();
+                Quit.Hide();
+            }
+        }
+        private void Exit()
+        {
+            this.Close();
         }
     }
 }

@@ -31,6 +31,7 @@ namespace Pseudo3DGame
         public PointF PLAYER_START { get; }
         public int PLAYER_ANGLE { get; }
         public float PLAYER_SPEED { get; }
+        public int MINIMUM_WALL_PLAYER_DISTANCE { get; }
         public float PLAYER_TURNING_SPEED { get; }
         public int PLAYER_MAP_SCALE { get; }
 
@@ -47,6 +48,7 @@ namespace Pseudo3DGame
         public double WALL_SCALE { get; }
         
         public int TEXTURE_SIZE { get; }
+        
 
         public Settings(int width, int height)
         {
@@ -82,6 +84,7 @@ namespace Pseudo3DGame
             this.WALL_SCALE = WIDTH / NUM_RAYS;
 
             this.TEXTURE_SIZE = 256;
+            this.MINIMUM_WALL_PLAYER_DISTANCE = 10;
         }
     }
 }
