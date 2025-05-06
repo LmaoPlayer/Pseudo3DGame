@@ -10,6 +10,7 @@ namespace Pseudo3DGame
 {
     internal class EscapeMenu
     {
+
         Panel menu = new Panel();
         public EscapeMenu(Settings game_settings, Panel given_panel)
         {
@@ -42,6 +43,13 @@ namespace Pseudo3DGame
             Quit.Text = "Quit Game";
             Quit.Font = font;
             menu.Controls.Add(Quit);
+            menu.Hide();
+        }
+
+        public void PauzeInvoke(bool pause)
+        {
+            if (pause) menu.Show();
+            else menu.Hide();
         }
     }
 }

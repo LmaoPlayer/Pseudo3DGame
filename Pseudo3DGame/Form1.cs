@@ -52,10 +52,7 @@ namespace Pseudo3DGame
         bool EnableHair = false;
 
         bool Paused = false;
-
-        Button Resume;
-        Button Settings;
-        Button Quit;
+        EscapeMenu esc;
 
         //Main function
         public Form1()
@@ -154,12 +151,8 @@ namespace Pseudo3DGame
             //Button setup
             Panel Menu = new Panel();
 
-            EscapeMenu esc = new EscapeMenu(game_settings, Menu);
+            esc = new EscapeMenu(game_settings, Menu);
             Controls.Add(Menu);
-            
-
-
-
 
             
 
@@ -167,18 +160,20 @@ namespace Pseudo3DGame
         }
         public void GameUpdater()
         {
-            rays.UpdateAngle(character.GetAngle());
-            rays.UpdateCoords(character.GetLoc());
+            if (!Paused)
+            {
+                rays.UpdateAngle(character.GetAngle());
+                rays.UpdateCoords(character.GetLoc());
+
+                double delta = stopwatch.Elapsed.TotalSeconds;
+                delta = Math.Min(delta, 0.1);
+                stopwatch.Restart();
+                character.UpdateDT(delta);
+                f.Invalidate();
+                Cursor.Position = center;
+            }
 
             this.Focus();
-
-            double delta = stopwatch.Elapsed.TotalSeconds;
-            delta = Math.Min(delta, 0.1);
-            stopwatch.Restart();
-            character.UpdateDT(delta);
-            f.Invalidate();
-
-            if (!Paused) Cursor.Position = center;
         }
         public void DrawScreen(PaintEventArgs e, int temp)
         {
@@ -199,13 +194,6 @@ namespace Pseudo3DGame
 
             BG.Dispose();
             RayPen.Dispose();
-
-
-
-            if (Paused)
-            {
-                
-            }
         }
         private void Draw2D(Graphics g, Brush[] P, Pen RayPen)
         {
@@ -312,16 +300,14 @@ namespace Pseudo3DGame
         private void PauzeFunction()
         {
             Paused = !Paused;
+            esc.PauzeInvoke(Paused);
             if (Paused)
             {
-                clock.Stop();
                 Cursor.Show();
                 f.Invalidate();
-
             }
             else
             {
-                clock.Start();
                 Cursor.Hide();
             }
         }
