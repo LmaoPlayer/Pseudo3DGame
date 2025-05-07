@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Runtime.Remoting.Channels;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -12,6 +13,10 @@ namespace Pseudo3DGame
     {
 
         Panel menu = new Panel();
+        public event EventHandler ResumeClick;
+        public event EventHandler QuitClick;
+        public event EventHandler SettingsClick;
+        bool pause;
         public EscapeMenu(Settings game_settings, Panel given_panel)
         {
             menu = given_panel;
@@ -27,6 +32,7 @@ namespace Pseudo3DGame
             //Resume.Click += (sender, e) => PauzeFunction();
             Resume.Text = "Continue";
             Resume.Font = font;
+            Resume.Click += (sender, e) => ResumeClick.Invoke(this, EventArgs.Empty);
             menu.Controls.Add(Resume);
 
             Button setting_button = new Button();
@@ -34,12 +40,14 @@ namespace Pseudo3DGame
             setting_button.Location = new Point(menu.Width / 14, (menu.Width / 10)*4);
             setting_button.Text = "Settings";
             setting_button.Font = font;
+            setting_button.KeyDown += (sender, e) => { if (e.KeyCode == Keys.Escape) ResumeClick.Invoke(this, EventArgs.Empty); };
+            //setting_button.Click += (sender, e) => SettingsClick.Invoke(this, EventArgs.Empty);
             menu.Controls.Add(setting_button);
 
             Button Quit = new Button();
             Quit.Size = new Size((game_settings.WIDTH / 7) * 2, (game_settings.HEIGHT / 10));
             Quit.Location = new Point(menu.Width / 14, (menu.Width / 10)*7);
-            //Quit.Click += (sender, e) => { clock.Stop(); Exit(); };
+            Quit.Click += (sender, e) => QuitClick.Invoke(this, EventArgs.Empty);
             Quit.Text = "Quit Game";
             Quit.Font = font;
             menu.Controls.Add(Quit);
@@ -50,6 +58,8 @@ namespace Pseudo3DGame
         {
             if (pause) menu.Show();
             else menu.Hide();
+
+            this.pause = pause;
         }
     }
 }

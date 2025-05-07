@@ -10,6 +10,7 @@ using System.Windows.Forms;
 using System.Diagnostics;
 using static System.Windows.Forms.AxHost;
 using System.IO;
+using System.Runtime.Remoting.Channels;
 
 //SCREAMING_SNAKE_CASE = constant
 //CamelCase = class
@@ -149,12 +150,13 @@ namespace Pseudo3DGame
 
 
             //Button setup
-            Panel Menu = new Panel();
+            Panel menu_screen = new Panel();
 
-            esc = new EscapeMenu(game_settings, Menu);
-            Controls.Add(Menu);
+            esc = new EscapeMenu(game_settings, menu_screen);
+            Controls.Add(menu_screen);
 
-            
+            esc.ResumeClick += (sender, e) => Resume();
+            esc.QuitClick += (sender, e) => Quit();
 
             f.SendToBack();
         }
@@ -171,9 +173,8 @@ namespace Pseudo3DGame
                 character.UpdateDT(delta);
                 f.Invalidate();
                 Cursor.Position = center;
+                Focus();
             }
-
-            this.Focus();
         }
         public void DrawScreen(PaintEventArgs e, int temp)
         {
@@ -313,7 +314,20 @@ namespace Pseudo3DGame
         }
         private void Exit()
         {
-            this.Close();
+            Close();
+        }
+
+        private void Quit()
+        {
+            Console.WriteLine("Exit");
+            Exit();
+        }
+
+
+        private void Resume()
+        {
+            Paused = true;
+            PauzeFunction();
         }
     }
 }
