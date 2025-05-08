@@ -8,6 +8,7 @@ namespace Pseudo3DGame
 {
     internal class Map
     {
+        public List<int[]> PossibleSpawnLocations;
         //0 is vloer, 1 is muur. Gekozen om makkelijk te kunnen onderscheiden
         public int[,] map =
         {
@@ -25,6 +26,7 @@ namespace Pseudo3DGame
 
         public Map(Settings setting)
         {
+            PossibleSpawnLocations = new List<int[]>();
             Random rnd = new Random();
             int[,] tempMap = new int[setting.MAP_HEIGHT,setting.MAP_WIDTH];
 
@@ -50,7 +52,11 @@ namespace Pseudo3DGame
                         if (tempNum == 5)
                         {
                             tempMap[i, j] = t;
-                        } 
+                        }
+                        else
+                        {
+                            PossibleSpawnLocations.Add(new int[]{ i, j});
+                        }
                     }
                 }
             }

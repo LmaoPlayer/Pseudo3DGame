@@ -20,6 +20,7 @@ namespace Pseudo3DGame
         public EscapeMenu(Settings game_settings, Panel given_panel)
         {
             menu = given_panel;
+            menu.BackColor = Color.Red;
             menu.Size = new Size(game_settings.WIDTH / 3, (game_settings.HEIGHT / 5) * 3);
             menu.Location = new Point(game_settings.WIDTH / 3, game_settings.HEIGHT / 5);
 
@@ -33,6 +34,7 @@ namespace Pseudo3DGame
             Resume.Text = "Continue";
             Resume.Font = font;
             Resume.Click += (sender, e) => ResumeClick.Invoke(this, EventArgs.Empty);
+            Resume.BackColor = Color.White;
             menu.Controls.Add(Resume);
 
             Button setting_button = new Button();
@@ -41,6 +43,7 @@ namespace Pseudo3DGame
             setting_button.Text = "Settings";
             setting_button.Font = font;
             setting_button.KeyDown += (sender, e) => { if (e.KeyCode == Keys.Escape) ResumeClick.Invoke(this, EventArgs.Empty); };
+            setting_button.BackColor = Color.White;
             //setting_button.Click += (sender, e) => SettingsClick.Invoke(this, EventArgs.Empty);
             menu.Controls.Add(setting_button);
 
@@ -50,6 +53,7 @@ namespace Pseudo3DGame
             Quit.Click += (sender, e) => QuitClick.Invoke(this, EventArgs.Empty);
             Quit.Text = "Quit Game";
             Quit.Font = font;
+            Quit.BackColor = Color.White;
             menu.Controls.Add(Quit);
             menu.Hide();
         }
