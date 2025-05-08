@@ -60,7 +60,6 @@ namespace Pseudo3DGame
                     }
                 }
             }
-
             this.map = tempMap;
             Console.WriteLine("Map gen done.");
         }

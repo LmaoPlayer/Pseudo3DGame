@@ -24,6 +24,7 @@ namespace Pseudo3DGame
             menu.Size = new Size(game_settings.WIDTH / 3, (game_settings.HEIGHT / 5) * 3);
             menu.Location = new Point(game_settings.WIDTH / 3, game_settings.HEIGHT / 5);
 
+
             Font font = new Font("Serif", (int)(game_settings.HEIGHT / 200) * 5, FontStyle.Bold);
 
 
@@ -64,6 +65,12 @@ namespace Pseudo3DGame
             else menu.Hide();
 
             this.pause = pause;
+        }
+
+        public void SettingsInvoke(bool settingsOpen)
+        {
+            if (settingsOpen) menu.Hide();
+            else menu.Show();
         }
     }
 }
