@@ -12,11 +12,18 @@ namespace Pseudo3DGame
     internal class EscapeMenu
     {
 
+
         Panel menu = new Panel();
+        
         public event EventHandler ResumeClick;
         public event EventHandler QuitClick;
         public event EventHandler SettingsClick;
+        
         bool pause;
+
+        SettingsMenu settings_menu;
+        Panel setting_panel;
+
         public EscapeMenu(Settings game_settings, Panel given_panel)
         {
             menu = given_panel;
@@ -57,6 +64,9 @@ namespace Pseudo3DGame
             Quit.BackColor = Color.White;
             menu.Controls.Add(Quit);
             menu.Hide();
+
+            setting_panel = new Panel() { Size = new Size(menu.Width, menu.Height), Location = new Point(menu.Location.X, menu.Location.Y), BackColor = menu.BackColor };
+            settings_menu = new SettingsMenu(game_settings, setting_panel);
         }
 
         public void PauzeInvoke(bool pause)
