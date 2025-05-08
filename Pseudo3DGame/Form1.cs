@@ -112,6 +112,8 @@ namespace Pseudo3DGame
                 }
             }
 
+            
+
             //Laad de images.
             walls = new PictureEditorToCorrectSize[] { new PictureEditorToCorrectSize(game_settings, tempwall1), new PictureEditorToCorrectSize(game_settings, tempwall2), new PictureEditorToCorrectSize(game_settings, Image.FromFile("Textures/Wall3.png")) };
 
@@ -157,8 +159,6 @@ namespace Pseudo3DGame
 
             esc.ResumeClick += (sender, e) => PauzeFunction();
             esc.QuitClick += (sender, e) => Exit();
-
-            settings = new SettingsMenu(game_settings, menu_screen);
 
             f.SendToBack();
         }

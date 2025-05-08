@@ -68,7 +68,6 @@ namespace Pseudo3DGame
             setting_panel = new Panel() { Size = new Size(menu.Width, menu.Height), Location = new Point(menu.Location.X, menu.Location.Y), BackColor = menu.BackColor };
             settings_menu = new SettingsMenu(game_settings, setting_panel);
 
-            //text als test
         }
 
         public void PauzeInvoke(bool pause)
