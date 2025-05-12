@@ -11,7 +11,7 @@ using System.Diagnostics;
 using static System.Windows.Forms.AxHost;
 using System.IO;
 using System.Runtime.Remoting.Channels;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
+//using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 //SCREAMING_SNAKE_CASE = constant
 //CamelCase = class
@@ -54,7 +54,7 @@ namespace Pseudo3DGame
         bool EnableHair = false;
 
         int CurrentMenuLayer = 0;
-        Menus esc;
+        MainMenu esc;
 
 
         //Main function
@@ -154,11 +154,12 @@ namespace Pseudo3DGame
             //Button setup
             Panel menu_screen = new Panel();
 
-            esc = new Menus(game_settings, menu_screen);
+            esc = new MainMenu(game_settings, menu_screen);
             Controls.Add(menu_screen);
 
             esc.ResumeClick += (sender, e) => PauzeFunction();
             esc.QuitClick += (sender, e) => Exit();
+            esc.SettingsClick += (sender, e) => { CurrentMenuLayer += 1; CheckMenuToShow(); };
 
             f.SendToBack();
         }
@@ -177,6 +178,7 @@ namespace Pseudo3DGame
                 Cursor.Position = center;
                 Focus();
             }
+            
         }
         public void DrawScreen(PaintEventArgs e, int temp)
         {
@@ -302,28 +304,44 @@ namespace Pseudo3DGame
         }
         private void PauzeFunction()
         {
-            CurrentMenuLayer = CurrentMenuLayer == 0? 1: CurrentMenuLayer-1;
-            CurrentMenuLayer %= 2;
-            esc.PauzeInvoke(CurrentMenuLayer);
-            if (CurrentMenuLayer != 0)
+            if (CurrentMenuLayer == 0) CurrentMenuLayer = 1;
+            else CurrentMenuLayer -= 1;
+
+            if (CurrentMenuLayer == 0)
             {
-                Cursor.Show();
-                f.Invalidate();
+                Cursor.Hide();
+                MessageBox.Show("Hide");
+                esc.Hide();
             }
             else
             {
-                Cursor.Hide();
+                CheckMenuToShow();
+                Cursor.Show();
+                f.Invalidate();
+                
             }
         }
         private void Exit()
         {
             Close();      
         }
-
-
-        //private Button[] MenuCreator()
-        //{
-        //    return new Button[]
-        //}
+        private void CheckMenuToShow()
+        {
+            switch (CurrentMenuLayer)
+            {
+                case 1:
+                    esc.Show();
+                    esc.setting_menu.Hide();
+                    break;
+                case 2:
+                    esc.Hide();
+                    esc.setting_menu.Show();
+                    break;
+                case 3:
+                    break;
+            }
+            Console.WriteLine(CurrentMenuLayer);
+            Focus();
+        }
     }
 }

@@ -9,11 +9,8 @@ using System.Windows.Forms;
 
 namespace Pseudo3DGame
 {
-    internal class Menus
+    internal class MainMenu : MenuInh
     {
-
-
-        Panel menu = new Panel();
         
         public event EventHandler ResumeClick;
         public event EventHandler QuitClick;
@@ -21,15 +18,14 @@ namespace Pseudo3DGame
         
         int CurrentMenuLayer;
 
-        //SettingsMenu settings_menu;
-        Panel setting_panel;
+        public SettingsMenu setting_menu;
 
-        public Menus(Settings game_settings, Panel given_panel)
+        public MainMenu(Settings game_settings, Panel given_panel)
         {
-            menu = given_panel;
-            menu.BackColor = Color.Red;
-            menu.Size = new Size(game_settings.WIDTH / 3, (game_settings.HEIGHT / 5) * 3);
-            menu.Location = new Point(game_settings.WIDTH / 3, game_settings.HEIGHT / 5);
+            menu_screen = given_panel;
+            menu_screen.BackColor = Color.Red;
+            menu_screen.Size = new Size(game_settings.WIDTH / 3, (game_settings.HEIGHT / 5) * 3);
+            menu_screen.Location = new Point(game_settings.WIDTH / 3, game_settings.HEIGHT / 5);
 
 
             Font font = new Font("Serif", (int)(game_settings.HEIGHT / 200) * 5, FontStyle.Bold);
@@ -37,51 +33,38 @@ namespace Pseudo3DGame
 
             Button Resume = new Button();
             Resume.Size = new Size((game_settings.WIDTH / 7) * 2, (game_settings.HEIGHT / 10));
-            Resume.Location = new Point(menu.Width/14, menu.Width/10);
+            Resume.Location = new Point(menu_screen.Width/14, menu_screen.Width/10);
             //Resume.Click += (sender, e) => PauzeFunction();
             Resume.Text = "Continue";
             Resume.Font = font;
             Resume.Click += (sender, e) => ResumeClick.Invoke(this, EventArgs.Empty);
             Resume.BackColor = Color.White;
-            menu.Controls.Add(Resume);
+            menu_screen.Controls.Add(Resume);
 
             Button setting_button = new Button();
             setting_button.Size = new Size((game_settings.WIDTH / 7) * 2, (game_settings.HEIGHT / 10));
-            setting_button.Location = new Point(menu.Width / 14, (menu.Width / 10)*4);
+            setting_button.Location = new Point(menu_screen.Width / 14, (menu_screen.Width / 10)*4);
             setting_button.Text = "Settings";
             setting_button.Font = font;
-            setting_button.KeyDown += (sender, e) => { if (e.KeyCode == Keys.Escape) ResumeClick.Invoke(this, EventArgs.Empty); };
             setting_button.BackColor = Color.White;
-            //setting_button.Click += (sender, e) => SettingsClick.Invoke(this, EventArgs.Empty);
-            menu.Controls.Add(setting_button);
+            setting_button.Click += (sender, e) => SettingsClick.Invoke(this, EventArgs.Empty);
+            menu_screen.Controls.Add(setting_button);
 
             Button Quit = new Button();
             Quit.Size = new Size((game_settings.WIDTH / 7) * 2, (game_settings.HEIGHT / 10));
-            Quit.Location = new Point(menu.Width / 14, (menu.Width / 10)*7);
+            Quit.Location = new Point(menu_screen.Width / 14, (menu_screen.Width / 10)*7);
             Quit.Click += (sender, e) => QuitClick.Invoke(this, EventArgs.Empty);
             Quit.Text = "Quit Game";
             Quit.Font = font;
             Quit.BackColor = Color.White;
-            menu.Controls.Add(Quit);
-            menu.Hide();
+            menu_screen.Controls.Add(Quit);
+            menu_screen.Hide();
 
-            setting_panel = new Panel() { Size = new Size(menu.Width, menu.Height), Location = new Point(menu.Location.X, menu.Location.Y), BackColor = menu.BackColor };
+            Panel setting_panel = new Panel() { Size = new Size(menu_screen.Width, menu_screen.Height), Location = new Point(menu_screen.Location.X, menu_screen.Location.Y), BackColor = menu_screen.BackColor };
             //settings_menu = new SettingsMenu(game_settings, setting_panel);
 
-        }
 
-        public void PauzeInvoke(int CurrentMenuLayer)
-        {
-            if (CurrentMenuLayer == 1) menu.Show();
-            else menu.Hide();
-
-            this.CurrentMenuLayer = CurrentMenuLayer;
-        }
-
-        public void SettingsInvoke(bool settingsOpen)
-        {
-            if (settingsOpen) menu.Hide();
-            else menu.Show();
+            setting_menu = new SettingsMenu(game_settings, setting_panel);
         }
     }
 }
