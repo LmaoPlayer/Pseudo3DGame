@@ -53,8 +53,8 @@ namespace Pseudo3DGame
 
         bool EnableHair = false;
 
-        bool Paused = false;
-        EscapeMenu esc;
+        int CurrentMenuLayer = 0;
+        Menus esc;
 
 
         //Main function
@@ -154,7 +154,7 @@ namespace Pseudo3DGame
             //Button setup
             Panel menu_screen = new Panel();
 
-            esc = new EscapeMenu(game_settings, menu_screen);
+            esc = new Menus(game_settings, menu_screen);
             Controls.Add(menu_screen);
 
             esc.ResumeClick += (sender, e) => PauzeFunction();
@@ -164,7 +164,7 @@ namespace Pseudo3DGame
         }
         public void GameUpdater()
         {
-            if (!Paused)
+            if (CurrentMenuLayer == 0)
             {
                 rays.UpdateAngle(character.GetAngle());
                 rays.UpdateCoords(character.GetLoc());
@@ -274,7 +274,7 @@ namespace Pseudo3DGame
         }
         private void HandleKeys()
         {
-            if (!Paused)
+            if (CurrentMenuLayer == 0)
             {
                 if (pressed_keys.Contains(Keys.Q)) character.Left();
                 if (pressed_keys.Contains(Keys.D)) character.Right();
@@ -293,7 +293,7 @@ namespace Pseudo3DGame
         }
         private void MouseHandler()
         {
-            if (!Paused)
+            if (CurrentMenuLayer == 0)
             {
                 character.RotateLR((center.X - Cursor.Position.X) * 0.5F);
 
@@ -302,9 +302,10 @@ namespace Pseudo3DGame
         }
         private void PauzeFunction()
         {
-            Paused = !Paused;
-            esc.PauzeInvoke(Paused);
-            if (Paused)
+            CurrentMenuLayer = CurrentMenuLayer == 0? 1: CurrentMenuLayer-1;
+            CurrentMenuLayer %= 2;
+            esc.PauzeInvoke(CurrentMenuLayer);
+            if (CurrentMenuLayer != 0)
             {
                 Cursor.Show();
                 f.Invalidate();
@@ -318,5 +319,11 @@ namespace Pseudo3DGame
         {
             Close();      
         }
+
+
+        //private Button[] MenuCreator()
+        //{
+        //    return new Button[]
+        //}
     }
 }

@@ -9,7 +9,7 @@ using System.Windows.Forms;
 
 namespace Pseudo3DGame
 {
-    internal class EscapeMenu
+    internal class Menus
     {
 
 
@@ -19,12 +19,12 @@ namespace Pseudo3DGame
         public event EventHandler QuitClick;
         public event EventHandler SettingsClick;
         
-        bool pause;
+        int CurrentMenuLayer;
 
-        SettingsMenu settings_menu;
+        //SettingsMenu settings_menu;
         Panel setting_panel;
 
-        public EscapeMenu(Settings game_settings, Panel given_panel)
+        public Menus(Settings game_settings, Panel given_panel)
         {
             menu = given_panel;
             menu.BackColor = Color.Red;
@@ -66,16 +66,16 @@ namespace Pseudo3DGame
             menu.Hide();
 
             setting_panel = new Panel() { Size = new Size(menu.Width, menu.Height), Location = new Point(menu.Location.X, menu.Location.Y), BackColor = menu.BackColor };
-            settings_menu = new SettingsMenu(game_settings, setting_panel);
+            //settings_menu = new SettingsMenu(game_settings, setting_panel);
 
         }
 
-        public void PauzeInvoke(bool pause)
+        public void PauzeInvoke(int CurrentMenuLayer)
         {
-            if (pause) menu.Show();
+            if (CurrentMenuLayer == 1) menu.Show();
             else menu.Hide();
 
-            this.pause = pause;
+            this.CurrentMenuLayer = CurrentMenuLayer;
         }
 
         public void SettingsInvoke(bool settingsOpen)
