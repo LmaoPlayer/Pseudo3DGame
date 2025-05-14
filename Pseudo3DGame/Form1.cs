@@ -11,6 +11,7 @@ using System.Diagnostics;
 using static System.Windows.Forms.AxHost;
 using System.IO;
 using System.Runtime.Remoting.Channels;
+using System.Runtime.InteropServices;
 //using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 //SCREAMING_SNAKE_CASE = constant
@@ -21,6 +22,7 @@ namespace Pseudo3DGame
 {
     public partial class Form1 : Form
     {
+
         Timer clock;
 
         PictureBox f;
@@ -55,7 +57,7 @@ namespace Pseudo3DGame
 
         int CurrentMenuLayer = 0;
         MainMenu esc;
-
+        bool MouseVisible = false;
 
         //Main function
         public Form1()
@@ -154,7 +156,7 @@ namespace Pseudo3DGame
             //Button setup
             Panel menu_screen = new Panel();
 
-            esc = new MainMenu(game_settings, menu_screen);
+            esc = new MainMenu(game_settings, menu_screen, this);
             Controls.Add(menu_screen);
 
             esc.ResumeClick += (sender, e) => PauzeFunction();
@@ -177,7 +179,9 @@ namespace Pseudo3DGame
                 f.Invalidate();
                 Cursor.Position = center;
                 Focus();
+
             }
+
             
         }
         public void DrawScreen(PaintEventArgs e, int temp)
@@ -306,20 +310,8 @@ namespace Pseudo3DGame
         {
             if (CurrentMenuLayer == 0) CurrentMenuLayer = 1;
             else CurrentMenuLayer -= 1;
-
-            if (CurrentMenuLayer == 0)
-            {
-                Cursor.Hide();
-                MessageBox.Show("Hide");
-                esc.Hide();
-            }
-            else
-            {
-                CheckMenuToShow();
-                Cursor.Show();
-                f.Invalidate();
-                
-            }
+            CheckMenuToShow();
+            f.Invalidate();
         }
         private void Exit()
         {
@@ -327,8 +319,12 @@ namespace Pseudo3DGame
         }
         private void CheckMenuToShow()
         {
+
             switch (CurrentMenuLayer)
             {
+                case 0:
+                    esc.Hide();
+                    break;
                 case 1:
                     esc.Show();
                     esc.setting_menu.Hide();
@@ -339,9 +335,21 @@ namespace Pseudo3DGame
                     break;
                 case 3:
                     break;
+                default:
+                    break;
             }
-            Console.WriteLine(CurrentMenuLayer);
             Focus();
+
+            if (CurrentMenuLayer == 0 && MouseVisible)
+            {
+                Cursor.Hide();
+                MouseVisible = false;
+            }
+            else if (CurrentMenuLayer != 0 && !MouseVisible)
+            {
+                Cursor.Show();
+                MouseVisible = true;
+            }
         }
     }
 }

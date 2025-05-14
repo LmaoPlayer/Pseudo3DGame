@@ -20,7 +20,7 @@ namespace Pseudo3DGame
 
         public SettingsMenu setting_menu;
 
-        public MainMenu(Settings game_settings, Panel given_panel)
+        public MainMenu(Settings game_settings, Panel given_panel, Form1 form)
         {
             menu_screen = given_panel;
             menu_screen.BackColor = Color.Red;
@@ -60,10 +60,10 @@ namespace Pseudo3DGame
             menu_screen.Controls.Add(Quit);
             menu_screen.Hide();
 
-            Panel setting_panel = new Panel() { Size = new Size(menu_screen.Width, menu_screen.Height), Location = new Point(menu_screen.Location.X, menu_screen.Location.Y), BackColor = menu_screen.BackColor };
+            Panel setting_panel = new Panel() { Size = new Size(menu_screen.Width, menu_screen.Height), BackColor = menu_screen.BackColor, Location = new Point(menu_screen.Location.X, menu_screen.Location.Y) };
             //settings_menu = new SettingsMenu(game_settings, setting_panel);
-
-
+            form.Controls.Add(setting_panel);
+            setting_panel.Hide();
             setting_menu = new SettingsMenu(game_settings, setting_panel);
         }
     }

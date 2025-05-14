@@ -11,7 +11,7 @@ namespace Pseudo3DGame
     {
         public SettingsMenu(Settings game_settings, Panel given_panel)
         {
-            this.menu_screen = given_panel;
+            menu_screen = given_panel;
         }
     }
 }
