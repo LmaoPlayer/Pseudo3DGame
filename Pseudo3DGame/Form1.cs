@@ -156,12 +156,16 @@ namespace Pseudo3DGame
             //Button setup
             Panel menu_screen = new Panel();
 
-            esc = new MainMenu(game_settings, menu_screen, this);
+            esc = new MainMenu(game_settings, menu_screen, this, new Font("Serif", (int)(game_settings.HEIGHT / 200) * 5, FontStyle.Bold));
             Controls.Add(menu_screen);
 
             esc.ResumeClick += (sender, e) => PauzeFunction();
             esc.QuitClick += (sender, e) => Exit();
-            esc.SettingsClick += (sender, e) => { CurrentMenuLayer += 1; CheckMenuToShow(); };
+            esc.SettingsClick += (sender, e) => { CurrentMenuLayer = 2; CheckMenuToShow(); };
+            esc.setting_menu.OpenRPMenu += (sender, e) => { CurrentMenuLayer = 3; CheckMenuToShow(); };
+            esc.setting_menu.RPMenu.OpenRPFolder += (sender, e) => { Process.Start("ResourcePacks"); Focus(); };
+            esc.setting_menu.RPMenu.BackFromRP += (sender, e) => PauzeFunction();
+            esc.setting_menu.ReturnFromSettings += (sender, e) => PauzeFunction();
 
             f.SendToBack();
         }
@@ -181,8 +185,6 @@ namespace Pseudo3DGame
                 Focus();
 
             }
-
-            
         }
         public void DrawScreen(PaintEventArgs e, int temp)
         {
@@ -250,7 +252,7 @@ namespace Pseudo3DGame
 
                 int sliceY = 0;
 
-                Bitmap SavedWallPiece = bmp[(int)ray_points[i, 6]].Clone(new Rectangle(sliceX, sliceY, (int)ray_points[i, 2], bmp[(int)ray_points[i, 6]].Height), bmp[(int)ray_points[i, 6]].PixelFormat);
+                    Bitmap SavedWallPiece = bmp[(int)ray_points[i, 6]].Clone(new Rectangle(sliceX, sliceY, (int)ray_points[i, 2], bmp[(int)ray_points[i, 6]].Height), bmp[(int)ray_points[i, 6]].PixelFormat);
                 //Bitmap SavedWallPiece = bmp[0].Clone(new Rectangle(sliceX, sliceY, (int)ray_points[i, 2], bmp[0].Height), bmp[0].PixelFormat);
                 g.DrawImage(SavedWallPiece, new RectangleF(ray_points[i, 0], ray_points[i, 1] + (float)vert_angle, ray_points[i, 2], ray_points[i, 3]));
                 //B.Dispose();
@@ -324,16 +326,23 @@ namespace Pseudo3DGame
             {
                 case 0:
                     esc.Hide();
+                    esc.setting_menu.Hide();
+                    esc.setting_menu.RPMenu.Hide();
                     break;
                 case 1:
                     esc.Show();
                     esc.setting_menu.Hide();
+                    esc.setting_menu.RPMenu.Hide();
                     break;
                 case 2:
                     esc.Hide();
                     esc.setting_menu.Show();
+                    esc.setting_menu.RPMenu.Hide();
                     break;
                 case 3:
+                    esc.Hide();
+                    esc.setting_menu.Hide();
+                    esc.setting_menu.RPMenu.Show();
                     break;
                 default:
                     break;

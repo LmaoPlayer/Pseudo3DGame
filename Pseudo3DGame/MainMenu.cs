@@ -20,15 +20,13 @@ namespace Pseudo3DGame
 
         public SettingsMenu setting_menu;
 
-        public MainMenu(Settings game_settings, Panel given_panel, Form1 form)
+        public MainMenu(Settings game_settings, Panel given_panel, Form1 form, Font font)
         {
             menu_screen = given_panel;
             menu_screen.BackColor = Color.Red;
             menu_screen.Size = new Size(game_settings.WIDTH / 3, (game_settings.HEIGHT / 5) * 3);
             menu_screen.Location = new Point(game_settings.WIDTH / 3, game_settings.HEIGHT / 5);
 
-
-            Font font = new Font("Serif", (int)(game_settings.HEIGHT / 200) * 5, FontStyle.Bold);
 
 
             Button Resume = new Button();
@@ -37,7 +35,7 @@ namespace Pseudo3DGame
             //Resume.Click += (sender, e) => PauzeFunction();
             Resume.Text = "Continue";
             Resume.Font = font;
-            Resume.Click += (sender, e) => ResumeClick.Invoke(this, EventArgs.Empty);
+            Resume.Click += (sender, e) => ResumeClick?.Invoke(this, EventArgs.Empty);
             Resume.BackColor = Color.White;
             menu_screen.Controls.Add(Resume);
 
@@ -47,24 +45,24 @@ namespace Pseudo3DGame
             setting_button.Text = "Settings";
             setting_button.Font = font;
             setting_button.BackColor = Color.White;
-            setting_button.Click += (sender, e) => SettingsClick.Invoke(this, EventArgs.Empty);
+            setting_button.Click += (sender, e) => SettingsClick?.Invoke(this, EventArgs.Empty);
             menu_screen.Controls.Add(setting_button);
 
             Button Quit = new Button();
             Quit.Size = new Size((game_settings.WIDTH / 7) * 2, (game_settings.HEIGHT / 10));
             Quit.Location = new Point(menu_screen.Width / 14, (menu_screen.Width / 10)*7);
-            Quit.Click += (sender, e) => QuitClick.Invoke(this, EventArgs.Empty);
+            Quit.Click += (sender, e) => QuitClick?.Invoke(this, EventArgs.Empty);
             Quit.Text = "Quit Game";
             Quit.Font = font;
             Quit.BackColor = Color.White;
             menu_screen.Controls.Add(Quit);
             menu_screen.Hide();
 
-            Panel setting_panel = new Panel() { Size = new Size(menu_screen.Width, menu_screen.Height), BackColor = menu_screen.BackColor, Location = new Point(menu_screen.Location.X, menu_screen.Location.Y) };
+            Panel setting_panel = new Panel() { Size = new Size(menu_screen.Width, menu_screen.Height), BackColor = Color.Blue, Location = new Point(menu_screen.Location.X, menu_screen.Location.Y) };
             //settings_menu = new SettingsMenu(game_settings, setting_panel);
             form.Controls.Add(setting_panel);
             setting_panel.Hide();
-            setting_menu = new SettingsMenu(game_settings, setting_panel);
+            setting_menu = new SettingsMenu(game_settings, setting_panel, form, font);
         }
     }
 }

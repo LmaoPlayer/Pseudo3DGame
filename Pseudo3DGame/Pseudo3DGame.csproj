@@ -60,6 +60,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Raycasting.cs" />
+    <Compile Include="ResourcePacksMenu.cs" />
     <Compile Include="Settings.cs" />
     <Compile Include="SettingsMenu.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
