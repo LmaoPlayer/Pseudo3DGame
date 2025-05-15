@@ -55,7 +55,7 @@ namespace Pseudo3DGame
 
             this.WIDTH = width;
             this.HEIGHT = height;
-            this.MAP_WIDTH = 40;
+            this.MAP_WIDTH = 80;
 
             this.PLAYER_MAP_SCALE = WIDTH / MAP_WIDTH;
             this.MAP_HEIGHT = MAP_WIDTH*HEIGHT/WIDTH;
@@ -83,7 +83,7 @@ namespace Pseudo3DGame
             this.WALL_SCALE = WIDTH / NUM_RAYS;
 
             this.TEXTURE_SIZE = 256;
-            this.MINIMUM_WALL_PLAYER_DISTANCE = 10;
+            this.MINIMUM_WALL_PLAYER_DISTANCE = 400/MAP_WIDTH;
         }
     }
 }
