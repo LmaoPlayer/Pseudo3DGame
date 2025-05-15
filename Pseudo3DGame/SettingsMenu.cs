@@ -18,7 +18,6 @@ namespace Pseudo3DGame
             menu_screen = given_panel;
 
 
-            
 
             Button res_pack_settings = new Button();
             res_pack_settings.Size = new Size((game_settings.WIDTH / 7) * 2, (game_settings.HEIGHT / 10));
@@ -29,7 +28,6 @@ namespace Pseudo3DGame
             res_pack_settings.Click += (sender, e) => OpenRPMenu?.Invoke(this, EventArgs.Empty);
             menu_screen.Controls.Add(res_pack_settings);
 
-
             Button Back = new Button();
             Back.Size = new Size((game_settings.WIDTH / 7) * 2, (game_settings.HEIGHT / 10));
             Back.Location = new Point(menu_screen.Width / 14, (menu_screen.Width / 10)*7);
@@ -39,6 +37,7 @@ namespace Pseudo3DGame
             Back.BackColor = Color.White;
             menu_screen.Controls.Add(Back);
             menu_screen.Hide();
+
 
 
             Panel RPpanel = new Panel() { Size = new Size(menu_screen.Width, menu_screen.Height), BackColor = Color.Yellow, Location = new Point(menu_screen.Location.X, menu_screen.Location.Y) };

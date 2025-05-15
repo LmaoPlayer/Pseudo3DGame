@@ -55,7 +55,7 @@ namespace Pseudo3DGame
 
             this.WIDTH = width;
             this.HEIGHT = height;
-            this.MAP_WIDTH = 200;
+            this.MAP_WIDTH = 40;
 
             this.PLAYER_MAP_SCALE = WIDTH / MAP_WIDTH;
             this.MAP_HEIGHT = MAP_WIDTH*HEIGHT/WIDTH;
@@ -71,7 +71,7 @@ namespace Pseudo3DGame
 
             this.FOV = Math.PI/3;
             this.HALF_FOV = FOV/2;
-            this.NUM_RAYS = WIDTH/2;
+            this.NUM_RAYS = WIDTH / 2;
             //this.NUM_RAYS = 50;
             this.HALF_NUM_RAYS = NUM_RAYS/2;
             this.DELTA_ANGLE = FOV/NUM_RAYS;

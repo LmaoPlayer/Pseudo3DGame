@@ -59,6 +59,9 @@ namespace Pseudo3DGame
         MainMenu esc;
         bool MouseVisible = false;
 
+
+        ImageGrabber FindImg = new ImageGrabber();
+
         //Main function
         public Form1()
         {
@@ -80,44 +83,13 @@ namespace Pseudo3DGame
             //this.Location = new Point((Screen.PrimaryScreen.Bounds.Width-this.Width)/2, (Screen.PrimaryScreen.Bounds.Height - this.Height) / 2);
 
             //Test met meerdere achtervoegsels
-            Image tempwall1;
-            try
-            {
-                tempwall1 = Image.FromFile("Textures/wall1.png");
-            }
-            catch (FileNotFoundException)
-            {
-                try
-                {
-                    tempwall1 = Image.FromFile("Textures/wall1.jpeg");
-                }
-                catch (FileNotFoundException)
-                {
-                    tempwall1 = Image.FromFile("Textures/wall1.jpg");
-                }
-            }
+            Image tempwall1 = FindImg.FindImg("Textures/wall1");
+            Image tempwall2 = FindImg.FindImg("Textures/wall2");
+            Image tempwall3 = FindImg.FindImg("Textures/wall3");
 
-            Image tempwall2;
-            try
-            {
-                tempwall2 = Image.FromFile("Textures/wall2.png");
-            }
-            catch (FileNotFoundException)
-            {
-                try
-                {
-                    tempwall2 = Image.FromFile("Textures/wall2.jpeg");
-                }
-                catch (FileNotFoundException)
-                {
-                    tempwall2 = Image.FromFile("Textures/wall2.jpg");
-                }
-            }
-
-            
 
             //Laad de images.
-            walls = new PictureEditorToCorrectSize[] { new PictureEditorToCorrectSize(game_settings, tempwall1), new PictureEditorToCorrectSize(game_settings, tempwall2), new PictureEditorToCorrectSize(game_settings, Image.FromFile("Textures/Wall3.png")) };
+            walls = new PictureEditorToCorrectSize[] { new PictureEditorToCorrectSize(game_settings, tempwall1), new PictureEditorToCorrectSize(game_settings, tempwall2), new PictureEditorToCorrectSize(game_settings, tempwall3) };
 
             //Maak een game clock: 1 seconde delen door FPS
             clock = new Timer();
@@ -252,7 +224,7 @@ namespace Pseudo3DGame
 
                 int sliceY = 0;
 
-                    Bitmap SavedWallPiece = bmp[(int)ray_points[i, 6]].Clone(new Rectangle(sliceX, sliceY, (int)ray_points[i, 2], bmp[(int)ray_points[i, 6]].Height), bmp[(int)ray_points[i, 6]].PixelFormat);
+                Bitmap SavedWallPiece = bmp[(int)ray_points[i, 6]].Clone(new Rectangle(sliceX, sliceY, (int)ray_points[i, 2], bmp[(int)ray_points[i, 6]].Height), bmp[(int)ray_points[i, 6]].PixelFormat);
                 //Bitmap SavedWallPiece = bmp[0].Clone(new Rectangle(sliceX, sliceY, (int)ray_points[i, 2], bmp[0].Height), bmp[0].PixelFormat);
                 g.DrawImage(SavedWallPiece, new RectangleF(ray_points[i, 0], ray_points[i, 1] + (float)vert_angle, ray_points[i, 2], ray_points[i, 3]));
                 //B.Dispose();
