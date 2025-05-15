@@ -31,7 +31,7 @@ namespace Pseudo3DGame
         public PointF PLAYER_START { get; }
         public int PLAYER_ANGLE { get; }
         public float PLAYER_SPEED { get; }
-        public int MINIMUM_WALL_PLAYER_DISTANCE { get; }
+        public float MINIMUM_WALL_PLAYER_DISTANCE { get; }
         public float PLAYER_TURNING_SPEED { get; }
         public int PLAYER_MAP_SCALE { get; }
 
@@ -55,7 +55,7 @@ namespace Pseudo3DGame
 
             this.WIDTH = width;
             this.HEIGHT = height;
-            this.MAP_WIDTH = 80;
+            this.MAP_WIDTH = 200;
 
             this.PLAYER_MAP_SCALE = WIDTH / MAP_WIDTH;
             this.MAP_HEIGHT = MAP_WIDTH*HEIGHT/WIDTH;
