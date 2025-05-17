@@ -12,6 +12,9 @@ using static System.Windows.Forms.AxHost;
 using System.IO;
 using System.Runtime.Remoting.Channels;
 using System.Runtime.InteropServices;
+using System.Collections;
+using System.Reflection;
+using System.Text.RegularExpressions;
 //using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 //SCREAMING_SNAKE_CASE = constant
@@ -135,9 +138,75 @@ namespace Pseudo3DGame
             esc.QuitClick += (sender, e) => Exit();
             esc.SettingsClick += (sender, e) => { CurrentMenuLayer = 2; CheckMenuToShow(); };
             esc.setting_menu.OpenRPMenu += (sender, e) => { CurrentMenuLayer = 3; CheckMenuToShow(); };
-            esc.setting_menu.RPMenu.OpenRPFolder += (sender, e) => { Process.Start("ResourcePacks"); Focus(); };
+            esc.setting_menu.RPMenu.OpenRPFolder += (sender, e) => Process.Start("ResourcePacks");
             esc.setting_menu.RPMenu.BackFromRP += (sender, e) => PauzeFunction();
             esc.setting_menu.ReturnFromSettings += (sender, e) => PauzeFunction();
+            esc.setting_menu.RPMenu.ApplyTextures += (sender, e) =>
+            {
+                if (esc.setting_menu.RPMenu.RPList.CheckedItems.Count > 0)
+                {
+                    
+                    string the_item = esc.setting_menu.RPMenu.RPList.CheckedItems[0].ToString();
+
+                    bool[] can_still_find = {true, true, true};
+
+                    if (Directory.GetFiles($"ResourcePacks/{the_item}").Count() > 0)
+                    {
+                        foreach (string item in Directory.GetFiles($"ResourcePacks/{the_item}"))
+                        {
+                            Match match1 = Regex.Match(item, @"wall1\.");
+                            Match match2 = Regex.Match(item, @"wall2\.");
+                            Match match3 = Regex.Match(item, @"wall3\.");
+
+                            if(match1.Success)
+                            {
+                                can_still_find[0] = false;
+                                tempwall1 = FindImg.FindImg($"ResourcePacks/{the_item}\\wall1");
+                            }
+                            else if (can_still_find[0]) tempwall1 = FindImg.FindImg("Textures/wall1");
+
+                            if (match2.Success)
+                            {
+                                can_still_find[1] = false;
+                                tempwall2 = FindImg.FindImg($"ResourcePacks/{the_item}\\wall2");
+                            }
+                            else if (can_still_find[1]) tempwall2 = FindImg.FindImg("Textures/wall2");
+
+                            if (match3.Success)
+                            {
+                                can_still_find[2] = false;
+                                tempwall3 = FindImg.FindImg($"ResourcePacks/{the_item}\\wall3");
+                            }
+                            else if (can_still_find[2]) tempwall3 = FindImg.FindImg("Textures/wall3");
+                        }
+                    }
+                }
+                else
+                {
+                    tempwall1 = FindImg.FindImg("Textures/wall1");
+                    tempwall2 = FindImg.FindImg("Textures/wall2");
+                    tempwall3 = FindImg.FindImg("Textures/wall3");
+                }
+                walls = new PictureEditorToCorrectSize[] { new PictureEditorToCorrectSize(game_settings, tempwall1), new PictureEditorToCorrectSize(game_settings, tempwall2), new PictureEditorToCorrectSize(game_settings, tempwall3) };
+
+                f.Invalidate();
+            };
+            esc.setting_menu.RPMenu.RPList.ItemCheck += (sender, e) =>
+            {
+                for (int i = 0; i < esc.setting_menu.RPMenu.RPList.Items.Count; i++)
+                {
+                    if (!esc.setting_menu.RPMenu.RPList.GetItemChecked(e.Index))
+                    {
+                        if (i != e.Index)
+                        {
+                            esc.setting_menu.RPMenu.RPList.SetItemChecked(i, false);
+                        }
+                    }
+                }
+            };
+
+            if (!Directory.Exists("ResourcePacks")) Directory.CreateDirectory("ResourcePacks");
+            esc.setting_menu.RPMenu.SetupRPList();
 
             f.SendToBack();
         }

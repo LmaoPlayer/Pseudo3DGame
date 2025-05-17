@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,6 +14,9 @@ namespace Pseudo3DGame
     {
         public event EventHandler OpenRPFolder;
         public event EventHandler BackFromRP;
+        public event EventHandler ApplyTextures;
+
+        public CheckedListBox RPList { get; }
         public ResourcePacksMenu(Settings game_settings, Panel given_panel, Form1 form, Font font)
         {
             menu_screen = given_panel;
@@ -40,9 +45,9 @@ namespace Pseudo3DGame
             menu_screen.Controls.Add(Back);
 
 
-            CheckedListBox RPList = new CheckedListBox();
-            RPList.Size = new Size((game_settings.WIDTH / 7) * 2, ((game_settings.HEIGHT / 10)*1));
-            RPList.Location = new Point(menu_screen.Width / 14, (menu_screen.Width / 5) * 1);
+            RPList = new CheckedListBox();
+            RPList.Size = new Size((game_settings.WIDTH / 7) * 2, ((game_settings.HEIGHT / 40)*8));
+            RPList.Location = new Point(menu_screen.Width / 14, (menu_screen.Width / 40) * 13);
             RPList.Font = font;
             RPList.BackColor = Color.White;
             menu_screen.Controls.Add(RPList);
@@ -52,6 +57,7 @@ namespace Pseudo3DGame
             ApplyRP.Location = new Point(menu_screen.Width / 2, (menu_screen.Width / 10) * 7);
             ApplyRP.Font = font;
             ApplyRP.Text = "Apply Resources";
+            ApplyRP.Click += (sender, e) => ApplyTextures?.Invoke(this, EventArgs.Empty);
             ApplyRP.BackColor = Color.White;
             menu_screen.Controls.Add(ApplyRP);
 
@@ -61,10 +67,22 @@ namespace Pseudo3DGame
             Refresh.Location = new Point(menu_screen.Width / 14, (menu_screen.Width / 10) * 7);
             Refresh.Font = font;
             Refresh.Text = "Refresh List";
+            Refresh.Click += (sender, e) => SetupRPList();
             Refresh.BackColor = Color.White;
             menu_screen.Controls.Add(Refresh);
+        }
 
+        public void SetupRPList()
+        {
+            RPList.Items.Clear();
 
+            string[] dir = Directory.GetDirectories("ResourcePacks");
+
+            foreach (string Pack in dir)
+            {
+                string temp = Pack.Split('\\')[1];
+                RPList.Items.Add(temp);
+            }
         }
     }
 }
