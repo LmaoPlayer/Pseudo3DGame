@@ -38,6 +38,33 @@ namespace Pseudo3DGame
             Back.Click += (sender, e) => BackFromRP?.Invoke(this, EventArgs.Empty);
             Back.BackColor = Color.White;
             menu_screen.Controls.Add(Back);
+
+
+            CheckedListBox RPList = new CheckedListBox();
+            RPList.Size = new Size((game_settings.WIDTH / 7) * 2, ((game_settings.HEIGHT / 10)*1));
+            RPList.Location = new Point(menu_screen.Width / 14, (menu_screen.Width / 5) * 1);
+            RPList.Font = font;
+            RPList.BackColor = Color.White;
+            menu_screen.Controls.Add(RPList);
+
+            Button ApplyRP = new Button();
+            ApplyRP.Size = new Size((game_settings.WIDTH / 7), (game_settings.HEIGHT / 10));
+            ApplyRP.Location = new Point(menu_screen.Width / 2, (menu_screen.Width / 10) * 7);
+            ApplyRP.Font = font;
+            ApplyRP.Text = "Apply Resources";
+            ApplyRP.BackColor = Color.White;
+            menu_screen.Controls.Add(ApplyRP);
+
+
+            Button Refresh = new Button();
+            Refresh.Size = new Size((game_settings.WIDTH / 7), (game_settings.HEIGHT / 10));
+            Refresh.Location = new Point(menu_screen.Width / 14, (menu_screen.Width / 10) * 7);
+            Refresh.Font = font;
+            Refresh.Text = "Refresh List";
+            Refresh.BackColor = Color.White;
+            menu_screen.Controls.Add(Refresh);
+
+
         }
     }
 }
