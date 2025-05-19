@@ -13,8 +13,8 @@ namespace Pseudo3DGame
     internal class ResourcePacksMenu : MenuInh
     {
         public event EventHandler OpenRPFolder;
-        public event EventHandler BackFromRP;
         public event EventHandler ApplyTextures;
+        public event EventHandler EscapeKeyPressed;
 
         public CheckedListBox RPList { get; }
         public ResourcePacksMenu(Settings game_settings, Panel given_panel, Form1 form, Font font)
@@ -40,7 +40,7 @@ namespace Pseudo3DGame
             //OpenRPFolder.Click += (sender, e) => PauzeFunction();
             Back.Text = "Return";
             Back.Font = font;
-            Back.Click += (sender, e) => BackFromRP?.Invoke(this, EventArgs.Empty);
+            Back.Click += (sender, e) => EscapeTheMenu();
             Back.BackColor = Color.White;
             menu_screen.Controls.Add(Back);
 
@@ -70,6 +70,24 @@ namespace Pseudo3DGame
             Refresh.Click += (sender, e) => SetupRPList();
             Refresh.BackColor = Color.White;
             menu_screen.Controls.Add(Refresh);
+
+            foreach (Control control in menu_screen.Controls)
+            {
+                control.KeyDown += (sender, e) => EscapeTheMenu(e);
+            }
+        }
+
+        public void EscapeTheMenu(KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Escape)
+            {
+                EscapeKeyPressed?.Invoke(this, EventArgs.Empty);
+            }
+        }
+
+        public void EscapeTheMenu()
+        {
+            EscapeKeyPressed?.Invoke(this, EventArgs.Empty);
         }
 
         public void SetupRPList()

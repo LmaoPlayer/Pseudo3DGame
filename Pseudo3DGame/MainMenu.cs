@@ -11,8 +11,6 @@ namespace Pseudo3DGame
 {
     internal class MainMenu : MenuInh
     {
-        
-        public event EventHandler ResumeClick;
         public event EventHandler QuitClick;
         public event EventHandler SettingsClick;
         
@@ -35,7 +33,7 @@ namespace Pseudo3DGame
             //Resume.Click += (sender, e) => PauzeFunction();
             Resume.Text = "Continue";
             Resume.Font = font;
-            Resume.Click += (sender, e) => ResumeClick?.Invoke(this, EventArgs.Empty);
+            Resume.Click += (sender, e) => setting_menu.RPMenu.EscapeTheMenu();
             Resume.BackColor = Color.White;
             menu_screen.Controls.Add(Resume);
 
@@ -63,6 +61,12 @@ namespace Pseudo3DGame
             form.Controls.Add(setting_panel);
             setting_panel.Hide();
             setting_menu = new SettingsMenu(game_settings, setting_panel, form, font);
+
+
+            foreach (Control control in menu_screen.Controls)
+            {
+                control.KeyDown += (sender, e) => setting_menu.RPMenu.EscapeTheMenu(e);
+            }
         }
     }
 }

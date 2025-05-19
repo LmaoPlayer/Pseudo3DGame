@@ -134,18 +134,17 @@ namespace Pseudo3DGame
             esc = new MainMenu(game_settings, menu_screen, this, new Font("Serif", (int)(game_settings.HEIGHT / 200) * 5, FontStyle.Bold));
             Controls.Add(menu_screen);
 
-            esc.ResumeClick += (sender, e) => PauzeFunction();
             esc.QuitClick += (sender, e) => Exit();
             esc.SettingsClick += (sender, e) => { CurrentMenuLayer = 2; CheckMenuToShow(); };
             esc.setting_menu.OpenRPMenu += (sender, e) => { CurrentMenuLayer = 3; CheckMenuToShow(); };
             esc.setting_menu.RPMenu.OpenRPFolder += (sender, e) => Process.Start("ResourcePacks");
-            esc.setting_menu.RPMenu.BackFromRP += (sender, e) => PauzeFunction();
-            esc.setting_menu.ReturnFromSettings += (sender, e) => PauzeFunction();
+            esc.setting_menu.RPMenu.EscapeKeyPressed += (sender, e) => PauzeFunction();
+
+
             esc.setting_menu.RPMenu.ApplyTextures += (sender, e) =>
             {
                 if (esc.setting_menu.RPMenu.RPList.CheckedItems.Count > 0)
                 {
-                    
                     string the_item = esc.setting_menu.RPMenu.RPList.CheckedItems[0].ToString();
 
                     bool[] can_still_find = {true, true, true};
@@ -180,6 +179,12 @@ namespace Pseudo3DGame
                             else if (can_still_find[2]) tempwall3 = FindImg.FindImg("Textures/wall3");
                         }
                     }
+                    else
+                    {
+                        tempwall1 = FindImg.FindImg("Textures/wall1");
+                        tempwall2 = FindImg.FindImg("Textures/wall2");
+                        tempwall3 = FindImg.FindImg("Textures/wall3");
+                    }
                 }
                 else
                 {
@@ -191,6 +196,12 @@ namespace Pseudo3DGame
 
                 f.Invalidate();
             };
+
+
+            esc.setting_menu.RPMenu.EscapeKeyPressed += (sender, e) => { };
+
+
+
             esc.setting_menu.RPMenu.RPList.ItemCheck += (sender, e) =>
             {
                 for (int i = 0; i < esc.setting_menu.RPMenu.RPList.Items.Count; i++)

@@ -12,7 +12,6 @@ namespace Pseudo3DGame
     {
         public ResourcePacksMenu RPMenu;
         public event EventHandler OpenRPMenu;
-        public event EventHandler ReturnFromSettings;
         public SettingsMenu(Settings game_settings, Panel given_panel, Form1 form, Font font)
         {
             menu_screen = given_panel;
@@ -31,7 +30,7 @@ namespace Pseudo3DGame
             Button Back = new Button();
             Back.Size = new Size((game_settings.WIDTH / 7) * 2, (game_settings.HEIGHT / 10));
             Back.Location = new Point(menu_screen.Width / 14, (menu_screen.Width / 10)*7);
-            Back.Click += (sender, e) => ReturnFromSettings?.Invoke(this, EventArgs.Empty);
+            Back.Click += (sender, e) => RPMenu.EscapeTheMenu();
             Back.Text = "Back";
             Back.Font = font;
             Back.BackColor = Color.White;
@@ -43,6 +42,11 @@ namespace Pseudo3DGame
             Panel RPpanel = new Panel() { Size = new Size(menu_screen.Width, menu_screen.Height), BackColor = Color.Yellow, Location = new Point(menu_screen.Location.X, menu_screen.Location.Y) };
             form.Controls.Add(RPpanel);
             RPMenu = new ResourcePacksMenu(game_settings, RPpanel, form, font);
+
+            foreach (Control control in menu_screen.Controls)
+            {
+                control.KeyDown += (sender, e) => RPMenu.EscapeTheMenu(e);
+            }
         }
     }
 }
