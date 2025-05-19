@@ -62,6 +62,10 @@ namespace Pseudo3DGame
         MainMenu esc;
         bool MouseVisible = false;
 
+        enum setting_menus { ResPacks, MapSaver}
+
+        setting_menus opened_menu;
+
 
         ImageGrabber FindImg = new ImageGrabber();
 
@@ -136,7 +140,8 @@ namespace Pseudo3DGame
 
             esc.QuitClick += (sender, e) => Exit();
             esc.SettingsClick += (sender, e) => { CurrentMenuLayer = 2; CheckMenuToShow(); };
-            esc.setting_menu.OpenRPMenu += (sender, e) => { CurrentMenuLayer = 3; CheckMenuToShow(); };
+            esc.setting_menu.OpenRPMenu += (sender, e) => { CurrentMenuLayer = 3; opened_menu = setting_menus.ResPacks; CheckMenuToShow(); };
+            esc.setting_menu.OpenMapMenu += (sender, e) => { CurrentMenuLayer = 3; opened_menu = setting_menus.MapSaver; CheckMenuToShow(); };
             esc.setting_menu.RPMenu.OpenRPFolder += (sender, e) => Process.Start("ResourcePacks");
             esc.setting_menu.RPMenu.EscapeKeyPressed += (sender, e) => PauzeFunction();
 
@@ -260,12 +265,13 @@ namespace Pseudo3DGame
         }
         private void Draw2D(Graphics g, Brush[] P, Pen RayPen)
         {
+            Bitmap[] bmp = new Bitmap[] { walls[0].GetBMP(), walls[1].GetBMP(), walls[2].GetBMP() };
             //Teken de map
             for (int map_length = 0; map_length < game_map.map.GetLength(0); map_length++)
             {
                 for (int map_width = 0; map_width < game_map.map.GetLength(1); map_width++)
                 {
-                    if (game_map.map[map_length, map_width] != 0) g.FillRectangle(P[game_map.map[map_length, map_width]-1], new Rectangle(map_width * game_settings.PLAYER_MAP_SCALE, map_length * game_settings.PLAYER_MAP_SCALE, game_settings.PLAYER_MAP_SCALE, game_settings.PLAYER_MAP_SCALE));
+                    if (game_map.map[map_length, map_width] != 0) g.DrawImage(bmp[game_map.map[map_length, map_width]-1], new Rectangle(map_width * game_settings.PLAYER_MAP_SCALE, map_length * game_settings.PLAYER_MAP_SCALE, game_settings.PLAYER_MAP_SCALE, game_settings.PLAYER_MAP_SCALE));
                 }
             }
 
@@ -327,6 +333,8 @@ namespace Pseudo3DGame
                 pressed_keys.Add(e.KeyCode);
                 HandleKeys();
             }
+
+            if (e.KeyCode == Keys.L) dialog = 1 - dialog;
         }
         private void TestKeyUp(KeyEventArgs e)
         {
@@ -392,9 +400,11 @@ namespace Pseudo3DGame
                     esc.setting_menu.RPMenu.Hide();
                     break;
                 case 3:
+                    if (opened_menu == setting_menus.ResPacks) esc.setting_menu.RPMenu.Show();
+                    else if (opened_menu == setting_menus.MapSaver) esc.setting_menu.map_menu.Show();
                     esc.Hide();
                     esc.setting_menu.Hide();
-                    esc.setting_menu.RPMenu.Show();
+                    
                     break;
                 default:
                     break;

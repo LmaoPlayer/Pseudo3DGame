@@ -12,11 +12,21 @@ namespace Pseudo3DGame
     {
         public ResourcePacksMenu RPMenu;
         public event EventHandler OpenRPMenu;
+
+        public MapMenu map_menu;
+        public event EventHandler OpenMapMenu;
         public SettingsMenu(Settings game_settings, Panel given_panel, Form1 form, Font font)
         {
             menu_screen = given_panel;
 
-
+            Button map_saving_button = new Button();
+            map_saving_button.Size = new Size((game_settings.WIDTH / 7) * 2, (game_settings.HEIGHT / 10));
+            map_saving_button.Location = new Point(menu_screen.Width / 14, (menu_screen.Width / 10));
+            map_saving_button.Text = "Map Saver";
+            map_saving_button.Font = font;
+            map_saving_button.BackColor = Color.White;
+            map_saving_button.Click += (sender, e) => OpenMapMenu?.Invoke(this, EventArgs.Empty);
+            menu_screen.Controls.Add(map_saving_button);
 
             Button res_pack_settings = new Button();
             res_pack_settings.Size = new Size((game_settings.WIDTH / 7) * 2, (game_settings.HEIGHT / 10));
