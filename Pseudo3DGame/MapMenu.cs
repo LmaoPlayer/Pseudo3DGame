@@ -11,9 +11,9 @@ namespace Pseudo3DGame
 {
     internal class MapMenu : MenuInh
     {
-        public event EventHandler OpenRPFolder;
-        public event EventHandler ApplyTextures;
-        public event EventHandler EscapeKeyPressed;
+        public event EventHandler OpenMapFolder;
+        public event EventHandler ApplyMapEvent;
+        public event EventHandler EscapeKeyPressedMaps;
 
         public CheckedListBox MapList { get; }
         public MapMenu(Settings game_settings, Panel given_panel, Form1 form, Font font)
@@ -21,14 +21,13 @@ namespace Pseudo3DGame
             menu_screen = given_panel;
             Hide();
 
-
             Button OpenMapFolderButton = new Button();
             OpenMapFolderButton.Size = new Size((game_settings.WIDTH / 7), (game_settings.HEIGHT / 10));
             OpenMapFolderButton.Location = new Point(menu_screen.Width / 14, menu_screen.Width / 10);
             //OpenRPFolder.Click += (sender, e) => PauzeFunction();
             OpenMapFolderButton.Text = "Maps Folder";
             OpenMapFolderButton.Font = font;
-            OpenMapFolderButton.Click += (sender, e) => OpenRPFolder?.Invoke(this, EventArgs.Empty);
+            OpenMapFolderButton.Click += (sender, e) => OpenMapFolder?.Invoke(this, EventArgs.Empty);
             OpenMapFolderButton.BackColor = Color.White;
             menu_screen.Controls.Add(OpenMapFolderButton);
 
@@ -39,7 +38,7 @@ namespace Pseudo3DGame
             //OpenRPFolder.Click += (sender, e) => PauzeFunction();
             Back.Text = "Return";
             Back.Font = font;
-            Back.Click += (sender, e) => EscapeTheMenu();
+            Back.Click += (sender, e) => EscapeKeyPressedMaps?.Invoke(this, EventArgs.Empty);
             Back.BackColor = Color.White;
             menu_screen.Controls.Add(Back);
 
@@ -56,7 +55,7 @@ namespace Pseudo3DGame
             ApplyMap.Location = new Point(menu_screen.Width / 2, (menu_screen.Width / 10) * 7);
             ApplyMap.Font = font;
             ApplyMap.Text = "Apply Map";
-            ApplyMap.Click += (sender, e) => ApplyTextures?.Invoke(this, EventArgs.Empty);
+            ApplyMap.Click += (sender, e) => ApplyMapEvent?.Invoke(this, EventArgs.Empty);
             ApplyMap.BackColor = Color.White;
             menu_screen.Controls.Add(ApplyMap);
 
@@ -66,38 +65,27 @@ namespace Pseudo3DGame
             Refresh.Location = new Point(menu_screen.Width / 14, (menu_screen.Width / 10) * 7);
             Refresh.Font = font;
             Refresh.Text = "Refresh List";
-            Refresh.Click += (sender, e) => SetupRPList();
+            Refresh.Click += (sender, e) => SetupMapList();
             Refresh.BackColor = Color.White;
             menu_screen.Controls.Add(Refresh);
 
+
             foreach (Control control in menu_screen.Controls)
             {
-                control.KeyDown += (sender, e) => EscapeTheMenu(e);
+                control.KeyDown += (sender, e) => EscapeKeyPressedMaps?.Invoke(this, EventArgs.Empty);
             }
         }
 
-        public void EscapeTheMenu(KeyEventArgs e)
-        {
-            if (e.KeyCode == Keys.Escape)
-            {
-                EscapeKeyPressed?.Invoke(this, EventArgs.Empty);
-            }
-        }
-
-        public void EscapeTheMenu()
-        {
-            EscapeKeyPressed?.Invoke(this, EventArgs.Empty);
-        }
-
-        public void SetupRPList()
+        public void SetupMapList()
         {
             MapList.Items.Clear();
 
-            string[] dir = Directory.GetDirectories("Maps");
+            string[] dir = Directory.GetFiles("Maps");
 
             foreach (string Pack in dir)
             {
                 string temp = Pack.Split('\\')[1];
+                temp = temp.Split('.')[0];
                 MapList.Items.Add(temp);
             }
         }

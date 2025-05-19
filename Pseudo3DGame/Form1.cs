@@ -143,9 +143,8 @@ namespace Pseudo3DGame
             esc.setting_menu.OpenRPMenu += (sender, e) => { CurrentMenuLayer = 3; opened_menu = setting_menus.ResPacks; CheckMenuToShow(); };
             esc.setting_menu.OpenMapMenu += (sender, e) => { CurrentMenuLayer = 3; opened_menu = setting_menus.MapSaver; CheckMenuToShow(); };
             esc.setting_menu.RPMenu.OpenRPFolder += (sender, e) => Process.Start("ResourcePacks");
+            esc.setting_menu.map_menu.OpenMapFolder += (sender, e) => Process.Start("Maps");
             esc.setting_menu.RPMenu.EscapeKeyPressed += (sender, e) => PauzeFunction();
-
-
             esc.setting_menu.RPMenu.ApplyTextures += (sender, e) =>
             {
                 if (esc.setting_menu.RPMenu.RPList.CheckedItems.Count > 0)
@@ -201,12 +200,21 @@ namespace Pseudo3DGame
 
                 f.Invalidate();
             };
+            esc.setting_menu.map_menu.ApplyMapEvent += (sender, e) =>
+            {
+                if (esc.setting_menu.map_menu.MapList.CheckedItems.Count > 0)
+                {
+                    string the_item = esc.setting_menu.map_menu.MapList.CheckedItems[0].ToString();
 
-
-            esc.setting_menu.RPMenu.EscapeKeyPressed += (sender, e) => { };
-
-
-
+                    if (Directory.Exists($"Maps/{the_item}.csv"))
+                    {
+                        string[] mapSTR = File.ReadAllLines($"Maps/{the_item}.csv");
+                        game_map.GenerateWithFile(mapSTR);
+                        character.CreateStartPos();
+                    }
+                }
+                f.Invalidate();
+            };
             esc.setting_menu.RPMenu.RPList.ItemCheck += (sender, e) =>
             {
                 for (int i = 0; i < esc.setting_menu.RPMenu.RPList.Items.Count; i++)
@@ -221,8 +229,11 @@ namespace Pseudo3DGame
                 }
             };
 
+
             if (!Directory.Exists("ResourcePacks")) Directory.CreateDirectory("ResourcePacks");
+            if (!Directory.Exists("Maps")) Directory.CreateDirectory("Maps");
             esc.setting_menu.RPMenu.SetupRPList();
+            esc.setting_menu.map_menu.SetupMapList();
 
             f.SendToBack();
         }
@@ -381,30 +392,31 @@ namespace Pseudo3DGame
         }
         private void CheckMenuToShow()
         {
-
             switch (CurrentMenuLayer)
             {
                 case 0:
                     esc.Hide();
                     esc.setting_menu.Hide();
                     esc.setting_menu.RPMenu.Hide();
+                    esc.setting_menu.map_menu.Hide();
                     break;
                 case 1:
                     esc.Show();
                     esc.setting_menu.Hide();
                     esc.setting_menu.RPMenu.Hide();
+                    esc.setting_menu.map_menu.Hide();
                     break;
                 case 2:
                     esc.Hide();
                     esc.setting_menu.Show();
                     esc.setting_menu.RPMenu.Hide();
+                    esc.setting_menu.map_menu.Hide();
                     break;
                 case 3:
-                    if (opened_menu == setting_menus.ResPacks) esc.setting_menu.RPMenu.Show();
-                    else if (opened_menu == setting_menus.MapSaver) esc.setting_menu.map_menu.Show();
+                    if (opened_menu == setting_menus.ResPacks) { esc.setting_menu.RPMenu.Show(); esc.setting_menu.map_menu.Hide(); }
+                    else if (opened_menu == setting_menus.MapSaver) { esc.setting_menu.map_menu.Show(); esc.setting_menu.RPMenu.Hide(); }
                     esc.Hide();
                     esc.setting_menu.Hide();
-                    
                     break;
                 default:
                     break;

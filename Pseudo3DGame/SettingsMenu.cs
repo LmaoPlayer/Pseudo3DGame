@@ -53,10 +53,17 @@ namespace Pseudo3DGame
             form.Controls.Add(RPpanel);
             RPMenu = new ResourcePacksMenu(game_settings, RPpanel, form, font);
 
+            Panel MapPanel = new Panel() { Size = new Size(menu_screen.Width, menu_screen.Height), BackColor = Color.Yellow, Location = new Point(menu_screen.Location.X, menu_screen.Location.Y) };
+            form.Controls.Add(MapPanel);
+            map_menu = new MapMenu(game_settings, MapPanel, form, font);
+
+
+
             foreach (Control control in menu_screen.Controls)
             {
                 control.KeyDown += (sender, e) => RPMenu.EscapeTheMenu(e);
             }
+            map_menu.EscapeKeyPressedMaps += (sender, e) => RPMenu.EscapeTheMenu();
         }
     }
 }

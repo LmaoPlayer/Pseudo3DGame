@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace Pseudo3DGame
 {
@@ -21,14 +22,29 @@ namespace Pseudo3DGame
 
         public Player(Settings game_settings, Map game_map) 
         {
-            this.x = game_settings.PLAYER_START.X;
-            this.y = game_settings.PLAYER_START.Y;
-            this.angle = game_settings.PLAYER_ANGLE;
+            
             this.setting = game_settings;
             this.map = game_map;
 
+            this.angle = game_settings.PLAYER_ANGLE;
             this.delta_time = 1;
             this.vert_angle = 0;
+            CreateStartPos();
+        }
+        public void CreateStartPos()
+        {
+            for (int i = 0; i < map.map.GetLength(0); i++)
+            {
+                for (int j = 0; j < map.map.GetLength(1); j++)
+                {
+                    if (map.map[i, j] == 0)
+                    {
+                        x = j;
+                        y = i;
+                        return;
+                    }
+                }
+            }
         }
 
         public PointF GetLoc()
