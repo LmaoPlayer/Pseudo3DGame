@@ -285,8 +285,6 @@ namespace Pseudo3DGame
             //Get the needed depth
             depth = depth_vert < depth_hor ? depth_vert : depth_hor;
 
-
-
             return new PointF(player_pos.X + setting.PLAYER_MAP_SCALE * (float)depth * (float)cos, player_pos.Y + setting.PLAYER_MAP_SCALE * (float)depth * (float)sin);
         }
     }

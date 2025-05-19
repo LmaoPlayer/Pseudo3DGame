@@ -10,11 +10,6 @@ namespace Pseudo3DGame
     internal class MenuInh
     {
         public Panel menu_screen;
-        public MenuInh()
-        {
-
-        }
-
         public void Show()
         {
             menu_screen.Show();
