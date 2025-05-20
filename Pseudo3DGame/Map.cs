@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -11,6 +12,7 @@ namespace Pseudo3DGame
     {
         public List<int[]> PossibleSpawnLocations;
         Settings setting;
+        public bool IsFinished = false;
         //0 is vloer, 1 is muur. Gekozen om makkelijk te kunnen onderscheiden
         public int[,] map =
         {
@@ -34,6 +36,7 @@ namespace Pseudo3DGame
 
         public void GenerateRandom()
         {
+            IsFinished = false;
             PossibleSpawnLocations = new List<int[]>();
             Random rnd = new Random();
             int[,] tempMap = new int[setting.MAP_HEIGHT, setting.MAP_WIDTH];
@@ -49,10 +52,10 @@ namespace Pseudo3DGame
                     else if (i == 0) tempMap[i, j] = t;
                     else if (j == setting.MAP_WIDTH - 1) tempMap[i, j] = t;
                     else if (i == setting.MAP_HEIGHT - 1) tempMap[i, j] = t;
-                    if (j == 1 && i == 1) tempMap[i, j] = 0;
-                    else if (j == 2 && i == 1) tempMap[i, j] = 0;
-                    else if (j == 1 && i == 2) tempMap[i, j] = 0;
-                    else if (j == 2 && i == 2) tempMap[i, j] = 0;
+                    //if (j == 1 && i == 1) tempMap[i, j] = 0;
+                    //else if (j == 2 && i == 1) tempMap[i, j] = 0;
+                    //else if (j == 1 && i == 2) tempMap[i, j] = 0;
+                    //else if (j == 2 && i == 2) tempMap[i, j] = 0;
                     else
                     {
                         int tempNum = rnd.Next(0, 6);
@@ -70,20 +73,102 @@ namespace Pseudo3DGame
             }
             this.map = tempMap;
             Console.WriteLine("Map gen done.");
+            IsFinished = true;
         }
 
         public void GenerateWithFile(string[] map_to_use)
         {
+            IsFinished = false;
+            List<int[]> temp_map = new List<int[]>();
+            List<int> temp_row = new List<int>();
 
-            for (int i = 0; i < map_to_use.Length;  i++)
+            for (int i = 0; i < map_to_use.GetLength(0) + 2; i++)
             {
-                
+                string[] rowSTRListNeg1;
+                string[] rowSTRList0;
+                string[] rowSTRList1;
+
+                if (i > 1 && i < map_to_use.GetLength(0) + 2) rowSTRListNeg1 = map_to_use[i - 2].Split(',');
+                else rowSTRListNeg1 = new string[0];
+
+                if (i != 0 && i != map_to_use.GetLength(0) + 1) rowSTRList0 = map_to_use[i - 1].Split(',');
+                else rowSTRList0 = new string[0];
+
+                if (i < map_to_use.GetLength(0)) rowSTRList1 = map_to_use[i].Split(',');
+                else rowSTRList1 = new string[0];
+
+
+                if (i == map_to_use.GetLength(0) + 1)
+                {
+                    int yee = 0;
+                }
+
+                for (int j = -1; j < Math.Max(Math.Max(rowSTRList1.Length, rowSTRList0.Length), rowSTRListNeg1.Length) + 1; j++)
+                {
+                    if (i == 0) temp_row.Add(1);
+                    else if (i == map_to_use.GetLength(0) + 1) temp_row.Add(1);
+                    else
+                    {
+                        if (j == -1) temp_row.Add(1);
+                        else
+                        {
+                            int temp = 0;
+
+                            if (rowSTRList0.Length > j)
+                            {
+                                if (int.TryParse(rowSTRList0[j], out temp)) temp_row.Add(temp);
+                                else temp_row.Add(1);
+                            }
+                            else temp_row.Add(1);
+                        }
+                    }
+                }
+                temp_map.Add(temp_row.ToArray());
+                temp_row.Clear();
             }
 
 
-            map = new int[map_to_use.GetLength(0) + 2, map_to_use.GetLength(0) + 2];
+            int x = 0;
+            
+            for (int i = 0; i < temp_map.Count; i++)
+            {
+                if (x < temp_map[i].Length) x = temp_map[i].Length;
+            }
+
+            setting.ChangedMap(x, map_to_use.GetLength(0));
+
+            map = new int[map_to_use.GetLength(0), x];
 
 
+
+            for (int i = 0; i < map.GetLength(0); i++)
+            {
+                for (int j = 0; j < map.GetLength(1); j++)
+                {
+                    try
+                    {
+                        map[i, j] = temp_map[i][j];
+                    }
+                    catch
+                    {
+                        map[i, j] = 1;
+                    }
+                }
+            }
+
+
+            IsFinished = true;
+
+            //for (int i = 0; i < temp_map.Count; i++)
+            //{
+            //    string str = "";
+
+            //    for (int j = 0; j < temp_map[i].Length; j++)
+            //    {
+            //        str += $"{temp_map[i][j]}, ";
+            //    }
+            //    Console.WriteLine(str);
+            //}
         }
     }
 }

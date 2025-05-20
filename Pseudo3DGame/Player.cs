@@ -19,31 +19,43 @@ namespace Pseudo3DGame
         Map map;
 
         Settings setting;
+        Timer CreateStart = new Timer();
+        public bool CanStartDrawing { get; private set; }
 
-        public Player(Settings game_settings, Map game_map) 
+        public Player(Settings game_settings, Map game_map)
         {
-            
+            CanStartDrawing = false;
+
             this.setting = game_settings;
             this.map = game_map;
 
             this.angle = game_settings.PLAYER_ANGLE;
             this.delta_time = 1;
             this.vert_angle = 0;
-            CreateStartPos();
+
+            CreateStart.Tick += (sender, e) => CreateStartPos();
+            CreateStart.Interval = 500;
+            CreateStart.Start();
         }
         public void CreateStartPos()
         {
-            for (int i = 0; i < map.map.GetLength(0); i++)
+            if (map.IsFinished)
             {
-                for (int j = 0; j < map.map.GetLength(1); j++)
+                for (int i = 0; i < map.map.GetLength(0); i++)
                 {
-                    if (map.map[i, j] == 0)
+                    for (int j = 0; j < map.map.GetLength(1); j++)
                     {
-                        x = j;
-                        y = i;
-                        return;
+                        if (map.map[i, j] == 0)
+                        {
+                            x = j * setting.PLAYER_MAP_SCALE + setting.PLAYER_MAP_SCALE/2;
+                            y = i * setting.PLAYER_MAP_SCALE + setting.PLAYER_MAP_SCALE/2;
+                            CreateStart.Stop();
+                            CanStartDrawing = true;
+                            return;
+                        }
                     }
                 }
+
             }
         }
 
@@ -132,6 +144,7 @@ namespace Pseudo3DGame
             }
             else
             {
+                Console.WriteLine(Math.Floor((y + new_y - setting.MINIMUM_WALL_PLAYER_DISTANCE) / setting.PLAYER_MAP_SCALE));
                 if (map.map[(int)Math.Floor((y + new_y - setting.MINIMUM_WALL_PLAYER_DISTANCE) / setting.PLAYER_MAP_SCALE), (int)Math.Floor((x) / setting.PLAYER_MAP_SCALE)] == 0)
                 {
                     y += new_y;

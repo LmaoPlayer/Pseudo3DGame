@@ -15,8 +15,8 @@ namespace Pseudo3DGame
         //Resolution: 
         public int WIDTH { get; }
         public int HEIGHT { get; }
-        public int MAP_WIDTH { get; }
-        public int MAP_HEIGHT { get; }
+        public int MAP_WIDTH { get; private set; }
+        public int MAP_HEIGHT { get; private set; }
 
 
         //Om met verschillende keyboards te spelen/testen
@@ -30,10 +30,10 @@ namespace Pseudo3DGame
         //Speler start positie
         public PointF PLAYER_START { get; }
         public int PLAYER_ANGLE { get; }
-        public float PLAYER_SPEED { get; }
-        public float MINIMUM_WALL_PLAYER_DISTANCE { get; }
+        public float PLAYER_SPEED { get; private set; }
+        public float MINIMUM_WALL_PLAYER_DISTANCE { get; private set; }
         public float PLAYER_TURNING_SPEED { get; }
-        public int PLAYER_MAP_SCALE { get; }
+        public int PLAYER_MAP_SCALE { get; private set; }
 
         public double FOV { get; }
         public double HALF_FOV { get; }
@@ -84,6 +84,17 @@ namespace Pseudo3DGame
 
             this.TEXTURE_SIZE = 256;
             this.MINIMUM_WALL_PLAYER_DISTANCE = 400/MAP_WIDTH;
+        }
+
+
+        public void ChangedMap(int newWidth, int newHeight)
+        {
+            MAP_WIDTH = newWidth;
+            MAP_HEIGHT = newHeight;
+
+            PLAYER_MAP_SCALE = WIDTH / MAP_WIDTH;
+            PLAYER_SPEED = (int) (100 / ((MAP_HEIGHT / 10)+DIV_BY_ZERO_ERROR));
+            MINIMUM_WALL_PLAYER_DISTANCE = 400 / MAP_WIDTH;
         }
     }
 }

@@ -107,7 +107,7 @@ namespace Pseudo3DGame
             f = new PictureBox();
             f.Size = new Size(game_settings.WIDTH, game_settings.HEIGHT);
             int temp = 0;
-            f.Paint += (sender, e) => { DrawScreen(e, temp); };
+            f.Paint += (sender, e) => { if (character.CanStartDrawing && game_map.IsFinished) DrawScreen(e, temp); };
             Controls.Add(f);
 
             //DT
@@ -205,8 +205,8 @@ namespace Pseudo3DGame
                 if (esc.setting_menu.map_menu.MapList.CheckedItems.Count > 0)
                 {
                     string the_item = esc.setting_menu.map_menu.MapList.CheckedItems[0].ToString();
-
-                    if (Directory.Exists($"Maps/{the_item}.csv"))
+                    
+                    if (File.Exists($"Maps/{the_item}.csv"))
                     {
                         string[] mapSTR = File.ReadAllLines($"Maps/{the_item}.csv");
                         game_map.GenerateWithFile(mapSTR);
@@ -280,9 +280,11 @@ namespace Pseudo3DGame
             //Teken de map
             for (int map_length = 0; map_length < game_map.map.GetLength(0); map_length++)
             {
+                if (map_length >= game_map.map.GetLength(0)) break;
                 for (int map_width = 0; map_width < game_map.map.GetLength(1); map_width++)
                 {
-                    if (game_map.map[map_length, map_width] != 0) g.DrawImage(bmp[game_map.map[map_length, map_width]-1], new Rectangle(map_width * game_settings.PLAYER_MAP_SCALE, map_length * game_settings.PLAYER_MAP_SCALE, game_settings.PLAYER_MAP_SCALE, game_settings.PLAYER_MAP_SCALE));
+                    if (map_width >= game_map.map.GetLength(1)) break;
+                    if (game_map.IsFinished && game_map.map[map_length, map_width] != 0) g.DrawImage(bmp[game_map.map[map_length, map_width] - 1], new Rectangle(map_width * game_settings.PLAYER_MAP_SCALE, map_length * game_settings.PLAYER_MAP_SCALE, game_settings.PLAYER_MAP_SCALE, game_settings.PLAYER_MAP_SCALE));
                 }
             }
 
