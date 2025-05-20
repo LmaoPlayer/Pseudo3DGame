@@ -228,6 +228,19 @@ namespace Pseudo3DGame
                     }
                 }
             };
+            esc.setting_menu.map_menu.MapList.ItemCheck += (sender, e) =>
+            {
+                for (int i = 0; i < esc.setting_menu.map_menu.MapList.Items.Count; i++)
+                {
+                    if (!esc.setting_menu.map_menu.MapList.GetItemChecked(e.Index))
+                    {
+                        if (i != e.Index)
+                        {
+                            esc.setting_menu.map_menu.MapList.SetItemChecked(i, false);
+                        }
+                    }
+                }
+            };
 
 
             if (!Directory.Exists("ResourcePacks")) Directory.CreateDirectory("ResourcePacks");

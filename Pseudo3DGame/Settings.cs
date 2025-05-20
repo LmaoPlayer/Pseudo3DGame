@@ -55,17 +55,20 @@ namespace Pseudo3DGame
 
             this.WIDTH = width;
             this.HEIGHT = height;
-            this.MAP_WIDTH = 14;
 
-            this.PLAYER_MAP_SCALE = WIDTH / MAP_WIDTH;
-            this.MAP_HEIGHT = MAP_WIDTH*HEIGHT/WIDTH;
+            int tempWidth = 40;
+            ChangedMap(tempWidth, tempWidth * HEIGHT / WIDTH);
+            //this.MAP_WIDTH = 14;
+
+            //this.PLAYER_MAP_SCALE = WIDTH / MAP_WIDTH;
+            //this.MAP_HEIGHT = MAP_WIDTH*HEIGHT/WIDTH;
 
             this.Selected = KeyBoards.ZQSD;
 
 
             this.PLAYER_START = new PointF(1.5F * PLAYER_MAP_SCALE, 1.5F * PLAYER_MAP_SCALE);
             this.PLAYER_ANGLE = 45;
-            this.PLAYER_SPEED = (100/MAP_HEIGHT)*10;
+            //this.PLAYER_SPEED = (100/MAP_HEIGHT)*10;
             this.PLAYER_TURNING_SPEED = 1F;
             
 
@@ -83,7 +86,7 @@ namespace Pseudo3DGame
             this.WALL_SCALE = WIDTH / NUM_RAYS;
 
             this.TEXTURE_SIZE = 256;
-            this.MINIMUM_WALL_PLAYER_DISTANCE = 400/MAP_WIDTH;
+            //this.MINIMUM_WALL_PLAYER_DISTANCE = PLAYER_MAP_SCALE / 6;
         }
 
 
@@ -93,10 +96,10 @@ namespace Pseudo3DGame
             MAP_HEIGHT = newHeight;
 
 
-
-            PLAYER_MAP_SCALE = Math.Min(WIDTH / (MAP_WIDTH+1), HEIGHT/(MAP_HEIGHT+1));
-            PLAYER_SPEED = (int) (100 / Math.Min(MAP_HEIGHT, MAP_WIDTH))*10;
-            MINIMUM_WALL_PLAYER_DISTANCE = 400 / Math.Max(MAP_WIDTH, MAP_HEIGHT);
+            int tempAddition = (int)Math.Ceiling((decimal)Math.Max(MAP_WIDTH, MAP_HEIGHT)/Math.Min(MAP_HEIGHT, MAP_WIDTH))*2;
+            PLAYER_MAP_SCALE = Math.Min(WIDTH / (MAP_WIDTH+tempAddition), HEIGHT/(MAP_HEIGHT+tempAddition));
+            PLAYER_SPEED = (100 / Math.Min(MAP_HEIGHT, MAP_WIDTH))*10;
+            MINIMUM_WALL_PLAYER_DISTANCE = PLAYER_MAP_SCALE/6;
         }
     }
 }

@@ -108,10 +108,10 @@ namespace Pseudo3DGame
                 else rowSTRList1 = new string[0];
 
 
-                if (i == map_to_use.GetLength(0) + 1)
-                {
-                    int yee = 0;
-                }
+                //if (i == map_to_use.GetLength(0) + 1)
+                //{
+                //    int breakpoint = 0;
+                //}
 
                 for (int j = -1; j < Math.Max(Math.Max(rowSTRList1.Length, rowSTRList0.Length), rowSTRListNeg1.Length) + 1; j++)
                 {
