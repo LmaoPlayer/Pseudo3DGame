@@ -55,7 +55,7 @@ namespace Pseudo3DGame
 
             this.WIDTH = width;
             this.HEIGHT = height;
-            this.MAP_WIDTH = 40;
+            this.MAP_WIDTH = 14;
 
             this.PLAYER_MAP_SCALE = WIDTH / MAP_WIDTH;
             this.MAP_HEIGHT = MAP_WIDTH*HEIGHT/WIDTH;
@@ -65,7 +65,7 @@ namespace Pseudo3DGame
 
             this.PLAYER_START = new PointF(1.5F * PLAYER_MAP_SCALE, 1.5F * PLAYER_MAP_SCALE);
             this.PLAYER_ANGLE = 45;
-            this.PLAYER_SPEED = 100/(MAP_HEIGHT/10);
+            this.PLAYER_SPEED = (100/MAP_HEIGHT)*10;
             this.PLAYER_TURNING_SPEED = 1F;
             
 
@@ -92,9 +92,11 @@ namespace Pseudo3DGame
             MAP_WIDTH = newWidth;
             MAP_HEIGHT = newHeight;
 
-            PLAYER_MAP_SCALE = WIDTH / MAP_WIDTH;
-            PLAYER_SPEED = (int) (100 / ((MAP_HEIGHT / 10)+DIV_BY_ZERO_ERROR));
-            MINIMUM_WALL_PLAYER_DISTANCE = 400 / MAP_WIDTH;
+
+
+            PLAYER_MAP_SCALE = Math.Min(WIDTH / (MAP_WIDTH+1), HEIGHT/(MAP_HEIGHT+1));
+            PLAYER_SPEED = (int) (100 / Math.Min(MAP_HEIGHT, MAP_WIDTH))*10;
+            MINIMUM_WALL_PLAYER_DISTANCE = 400 / Math.Max(MAP_WIDTH, MAP_HEIGHT);
         }
     }
 }

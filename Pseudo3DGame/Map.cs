@@ -82,19 +82,29 @@ namespace Pseudo3DGame
             List<int[]> temp_map = new List<int[]>();
             List<int> temp_row = new List<int>();
 
+
+            char SplitOn = ',';
+            if (map_to_use[0].Contains(";")) SplitOn = ';';
+            else if (map_to_use[0].Contains("/")) SplitOn = '/';
+            if (map_to_use[0].Contains("\\")) SplitOn = '\\';
+
+
             for (int i = 0; i < map_to_use.GetLength(0) + 2; i++)
             {
                 string[] rowSTRListNeg1;
                 string[] rowSTRList0;
                 string[] rowSTRList1;
 
-                if (i > 1 && i < map_to_use.GetLength(0) + 2) rowSTRListNeg1 = map_to_use[i - 2].Split(',');
+                
+
+
+                if (i > 1 && i < map_to_use.GetLength(0) + 2) rowSTRListNeg1 = map_to_use[i - 2].Split(SplitOn);
                 else rowSTRListNeg1 = new string[0];
 
-                if (i != 0 && i != map_to_use.GetLength(0) + 1) rowSTRList0 = map_to_use[i - 1].Split(',');
+                if (i != 0 && i != map_to_use.GetLength(0) + 1) rowSTRList0 = map_to_use[i - 1].Split(SplitOn);
                 else rowSTRList0 = new string[0];
 
-                if (i < map_to_use.GetLength(0)) rowSTRList1 = map_to_use[i].Split(',');
+                if (i < map_to_use.GetLength(0)) rowSTRList1 = map_to_use[i].Split(SplitOn);
                 else rowSTRList1 = new string[0];
 
 
@@ -137,8 +147,7 @@ namespace Pseudo3DGame
 
             setting.ChangedMap(x, map_to_use.GetLength(0));
 
-            map = new int[map_to_use.GetLength(0), x];
-
+            map = new int[temp_map.Count, x];
 
 
             for (int i = 0; i < map.GetLength(0); i++)

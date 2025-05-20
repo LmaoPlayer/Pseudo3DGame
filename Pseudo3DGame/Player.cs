@@ -144,7 +144,6 @@ namespace Pseudo3DGame
             }
             else
             {
-                Console.WriteLine(Math.Floor((y + new_y - setting.MINIMUM_WALL_PLAYER_DISTANCE) / setting.PLAYER_MAP_SCALE));
                 if (map.map[(int)Math.Floor((y + new_y - setting.MINIMUM_WALL_PLAYER_DISTANCE) / setting.PLAYER_MAP_SCALE), (int)Math.Floor((x) / setting.PLAYER_MAP_SCALE)] == 0)
                 {
                     y += new_y;
