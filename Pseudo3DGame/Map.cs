@@ -1,10 +1,12 @@
 ﻿using Pseudo3DGame.Properties;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace Pseudo3DGame
 {
@@ -167,17 +169,43 @@ namespace Pseudo3DGame
 
 
             IsFinished = true;
+        }
 
-            //for (int i = 0; i < temp_map.Count; i++)
-            //{
-            //    string str = "";
+        public void SaveMap()
+        {
+            int Again = 1;
+            
+            for (int i = 0; i < Again; i++)
+            {
+                if (File.Exists($"Maps/Map{i + 1}.csv"))
+                {
+                    Again ++;
+                }
+                else
+                {
+                    File.Create($"Maps/Map{i + 1}.csv");
+                    File.WriteAllText($"Maps/Map{i + 1}.csv", WriteMap());
+                    MessageBox.Show("Finished");
+                    break;
 
-            //    for (int j = 0; j < temp_map[i].Length; j++)
-            //    {
-            //        str += $"{temp_map[i][j]}, ";
-            //    }
-            //    Console.WriteLine(str);
-            //}
+                    
+                }
+            }
+        }
+        public string WriteMap()
+        {
+            string tempMap = "";
+            for (int i = 0; i < map.GetLength(0); i++)
+            {
+
+                for (int j = 0; j < map.GetLength(1); j++)
+                {
+                    if (j != map.GetLength(1) - 1) tempMap += $"{map[i, j]},";
+                    else tempMap += $"{map[i, j]}";
+                }
+                tempMap += "\n";
+            }
+            return tempMap;
         }
     }
 }

@@ -204,6 +204,18 @@ namespace Pseudo3DGame
             {
                 if (esc.setting_menu.map_menu.MapList.CheckedItems.Count > 0)
                 {
+                    if (esc.setting_menu.map_menu.MapList.CheckedItems[0].ToString() == "Random")
+                    {
+                        int TestWidth = game_settings.MAP_WIDTH;
+                        int TestHeight = game_settings.MAP_HEIGHT;
+
+                        int.TryParse(esc.setting_menu.map_menu.WidthTXT.Text, out TestWidth);
+                        int.TryParse(esc.setting_menu.map_menu.HeightTXT.Text, out TestHeight);
+
+                        game_settings.ChangedMap(TestWidth, TestHeight);
+                        game_map.GenerateRandom();
+                        character.CreateStartPos();
+                    }
                     string the_item = esc.setting_menu.map_menu.MapList.CheckedItems[0].ToString();
                     
                     if (File.Exists($"Maps/{the_item}.csv"))
@@ -212,6 +224,10 @@ namespace Pseudo3DGame
                         game_map.GenerateWithFile(mapSTR);
                         character.CreateStartPos();
                     }
+                }
+                else
+                {
+                    MessageBox.Show("No Map Selected");
                 }
                 f.Invalidate();
             };
@@ -241,7 +257,7 @@ namespace Pseudo3DGame
                     }
                 }
             };
-
+            esc.setting_menu.map_menu.SaveMap += (sender, e) => game_map.SaveMap();
 
             if (!Directory.Exists("ResourcePacks")) Directory.CreateDirectory("ResourcePacks");
             if (!Directory.Exists("Maps")) Directory.CreateDirectory("Maps");

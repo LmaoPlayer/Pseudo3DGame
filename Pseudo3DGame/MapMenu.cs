@@ -14,6 +14,10 @@ namespace Pseudo3DGame
         public event EventHandler OpenMapFolder;
         public event EventHandler ApplyMapEvent;
         public event EventHandler EscapeKeyPressedMaps;
+        public event EventHandler SaveMap;
+
+        public TextBox WidthTXT;
+        public TextBox HeightTXT;
 
         public CheckedListBox MapList { get; }
         public MapMenu(Settings game_settings, Panel given_panel, Form1 form, Font font)
@@ -70,9 +74,37 @@ namespace Pseudo3DGame
             menu_screen.Controls.Add(Refresh);
 
 
+
+            Button Save = new Button();
+            Save.Size = new Size((game_settings.WIDTH / 7), (game_settings.HEIGHT / 10));
+            Save.Location = new Point(menu_screen.Width / 14, (menu_screen.Width/5)*4);
+            Save.Font = font;
+            Save.Text = "Save Current Map";
+            Save.Click += (sender, e) => SaveMap?.Invoke(this, EventArgs.Empty);
+            Save.BackColor = Color.White;
+            menu_screen.Controls.Add(Save);
+
+            WidthTXT = new TextBox();
+            WidthTXT.Size = new Size((game_settings.WIDTH / 7), (game_settings.HEIGHT / 20));
+            WidthTXT.Location = new Point(menu_screen.Width / 2, (menu_screen.Width / 5) * 4);
+            WidthTXT.Font = font;
+            WidthTXT.Text = "Set Width";
+            WidthTXT.BackColor = Color.White;
+            menu_screen.Controls.Add(WidthTXT);
+
+
+            HeightTXT = new TextBox();
+            HeightTXT.Size = new Size((game_settings.WIDTH / 7), (game_settings.HEIGHT / 20));
+            HeightTXT.Location = new Point(menu_screen.Width / 2, (menu_screen.Width / 8) * 7);
+            HeightTXT.Font = font;
+            HeightTXT.Text = "Set Height";
+            HeightTXT.BackColor = Color.White;
+            menu_screen.Controls.Add(HeightTXT);
+
+
             foreach (Control control in menu_screen.Controls)
             {
-                control.KeyDown += (sender, e) => EscapeKeyPressedMaps?.Invoke(this, EventArgs.Empty);
+                control.KeyDown += (sender, e) => { if (e.KeyCode == Keys.Escape) EscapeKeyPressedMaps?.Invoke(this, EventArgs.Empty); };
             }
         }
 
@@ -81,6 +113,8 @@ namespace Pseudo3DGame
             MapList.Items.Clear();
 
             string[] dir = Directory.GetFiles("Maps");
+
+            MapList.Items.Add("Random");
 
             foreach (string Pack in dir)
             {
