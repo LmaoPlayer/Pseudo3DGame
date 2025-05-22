@@ -183,8 +183,7 @@ namespace Pseudo3DGame
                 }
                 else
                 {
-                    File.Create($"Maps/Map{i + 1}.csv");
-                    File.WriteAllText($"Maps/Map{i + 1}.csv", WriteMap());
+                    WriteMap($"Maps/Map{i + 1}.csv");
                     MessageBox.Show("Finished");
                     break;
 
@@ -192,20 +191,22 @@ namespace Pseudo3DGame
                 }
             }
         }
-        public string WriteMap()
+        public void WriteMap(string path)
         {
-            string tempMap = "";
+            List<string> tempMap = new List<string>();
+            string tempRow = "";
             for (int i = 0; i < map.GetLength(0); i++)
             {
 
                 for (int j = 0; j < map.GetLength(1); j++)
                 {
-                    if (j != map.GetLength(1) - 1) tempMap += $"{map[i, j]},";
-                    else tempMap += $"{map[i, j]}";
+                    if (j != map.GetLength(1) - 1) tempRow += $"{map[i, j]},";
+                    else tempRow += $"{map[i, j]}";
                 }
-                tempMap += "\n";
+                tempMap.Add(tempRow);
+                tempRow = "";
             }
-            return tempMap;
+            File.WriteAllLines(path, tempMap);
         }
     }
 }
