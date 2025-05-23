@@ -124,8 +124,8 @@ namespace Pseudo3DGame
                     {
                         if (int.TryParse(rowSTRList0[j], out temp))
                         {
-                            if (!(i == 0 || j == 0 || i == map_to_use.GetLength(0) || j == Math.Max(Math.Max(rowSTRList1.Length, rowSTRList0.Length), rowSTRListNeg1.Length)) && temp != 0) temp_row.Add(temp);
-                            else temp_row.Add(1);
+                            if ((i == 1 || j == 0 || i == map_to_use.GetLength(0) || j == Math.Max(Math.Max(rowSTRList1.Length, rowSTRList0.Length), rowSTRListNeg1.Length)) && temp == 0) temp_row.Add(1);
+                            else temp_row.Add(temp);
                         }
                         else temp_row.Add(1);
                     }

@@ -72,6 +72,9 @@ namespace Pseudo3DGame
         //Main function
         public Form1()
         {
+            this.DoubleBuffered = true;
+
+
             //Debug met 2D
             dialog = MessageBox.Show("Would you like the 3D preview?", "", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes ? 1 : 0;
 
