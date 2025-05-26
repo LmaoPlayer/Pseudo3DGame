@@ -162,47 +162,58 @@ namespace Pseudo3DGame
                     }
                 }
             }
-
-
             IsFinished = true;
         }
 
-        public void SaveMap()
+        public void SaveMap(string name)
         {
-            int Again = 1;
+            if (name == "" || File.Exists($"Maps/{name}.csv"))
+            {
+                int Again = 1;
+
+                for (int i = 0; i < Again; i++)
+                {
+                    if (File.Exists($"Maps/Map{i + 1}.csv"))
+                    {
+                        Again++;
+                    }
+                    else
+                    {
+                        WriteMap($"Maps/Map{i + 1}.csv");
+                        MessageBox.Show("Finished");
+                        break;
+
+                    }
+                }
+            }
+            else
+            {
+                if (WriteMap($"Maps/{name}.csv")) MessageBox.Show("Finished");
+                else MessageBox.Show("Error saving map");
+            }
             
-            for (int i = 0; i < Again; i++)
-            {
-                if (File.Exists($"Maps/Map{i + 1}.csv"))
-                {
-                    Again ++;
-                }
-                else
-                {
-                    WriteMap($"Maps/Map{i + 1}.csv");
-                    MessageBox.Show("Finished");
-                    break;
-
-                    
-                }
-            }
         }
-        public void WriteMap(string path)
+        public bool WriteMap(string path)
         {
-            List<string> tempMap = new List<string>();
-            string tempRow = "";
-            for (int i = 0; i < map.GetLength(0); i++)
+            try
             {
-
-                for (int j = 0; j < map.GetLength(1); j++)
+                List<string> tempMap = new List<string>();
+                string tempRow = "";
+                for (int i = 0; i < map.GetLength(0); i++)
                 {
-                    if (j != map.GetLength(1) - 1) tempRow += $"{map[i, j]},";
-                    else tempRow += $"{map[i, j]}";
+
+                    for (int j = 0; j < map.GetLength(1); j++)
+                    {
+                        if (j != map.GetLength(1) - 1) tempRow += $"{map[i, j]},";
+                        else tempRow += $"{map[i, j]}";
+                    }
+                    tempMap.Add(tempRow);
+                    tempRow = "";
                 }
-                tempMap.Add(tempRow);
-                tempRow = "";
+                File.WriteAllLines(path, tempMap);
+                return true;
             }
-            File.WriteAllLines(path, tempMap);
+            catch { return false; };
         }
     }
 }

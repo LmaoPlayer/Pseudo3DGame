@@ -15,6 +15,7 @@ using System.Runtime.InteropServices;
 using System.Collections;
 using System.Reflection;
 using System.Text.RegularExpressions;
+using Microsoft.VisualBasic;
 //using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 //SCREAMING_SNAKE_CASE = constant
@@ -260,7 +261,7 @@ namespace Pseudo3DGame
                     }
                 }
             };
-            esc.setting_menu.map_menu.SaveMap += (sender, e) => game_map.SaveMap();
+            esc.setting_menu.map_menu.SaveMap += (sender, e) => { game_map.SaveMap(Interaction.InputBox("File Name:", "File_Name", "")); };
 
             if (!Directory.Exists("ResourcePacks")) Directory.CreateDirectory("ResourcePacks");
             if (!Directory.Exists("Maps")) Directory.CreateDirectory("Maps");
