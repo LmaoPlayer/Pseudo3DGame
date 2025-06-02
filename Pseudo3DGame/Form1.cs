@@ -250,6 +250,8 @@ namespace Pseudo3DGame
             };
             esc.setting_menu.map_menu.MapList.ItemCheck += (sender, e) =>
             {
+                bool ShouldITemporarilyChange = dialog == 0 ? false : true;
+                dialog = 0;
                 for (int i = 0; i < esc.setting_menu.map_menu.MapList.Items.Count; i++)
                 {
                     if (!esc.setting_menu.map_menu.MapList.GetItemChecked(e.Index))
@@ -257,9 +259,15 @@ namespace Pseudo3DGame
                         if (i != e.Index)
                         {
                             esc.setting_menu.map_menu.MapList.SetItemChecked(i, false);
+                            
                         }
                     }
                 }
+                rays.UpdateAngle(character.GetAngle());
+                rays.UpdateCoords(character.GetLoc());
+                f.Invalidate();
+                if (ShouldITemporarilyChange) dialog = 1;
+                //f.Invalidate();
             };
             esc.setting_menu.map_menu.SaveMap += (sender, e) => { game_map.SaveMap(Interaction.InputBox("File Name:", "File_Name", "")); };
 
@@ -272,20 +280,19 @@ namespace Pseudo3DGame
         }
         public void GameUpdater()
         {
+            rays.UpdateAngle(character.GetAngle());
+            rays.UpdateCoords(character.GetLoc());
             if (CurrentMenuLayer == 0)
             {
-                rays.UpdateAngle(character.GetAngle());
-                rays.UpdateCoords(character.GetLoc());
-
                 double delta = stopwatch.Elapsed.TotalSeconds;
                 delta = Math.Min(delta, 0.1);
                 stopwatch.Restart();
                 character.UpdateDT(delta);
-                f.Invalidate();
+                
                 Cursor.Position = center;
                 Focus();
-
             }
+            f.Invalidate();
         }
         public void DrawScreen(PaintEventArgs e, int temp)
         {
