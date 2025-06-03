@@ -358,8 +358,15 @@ namespace Pseudo3DGame
             float[,] ray_points = rays.Draw3D();
             double vert_angle = character.GetVertAngle();
 
-            g.DrawImage(bmp[3], new Rectangle(0, game_settings.HEIGHT/2 + (int)character.GetVertAngle(), game_settings.WIDTH, game_settings.HEIGHT/2 - (int)character.GetVertAngle()));
+            //Sky Floor Offset
+            double sf_offset = 100 * character.GetHorAngle();
+
+            //Floor en sky effect
+            g.DrawImage(bmp[3], new Rectangle(-(int)sf_offset, game_settings.HEIGHT / 2, game_settings.WIDTH, game_settings.HEIGHT/2));
+            g.DrawImage(bmp[3], new Rectangle(game_settings.WIDTH - (int)sf_offset, game_settings.HEIGHT / 2, game_settings.WIDTH, game_settings.HEIGHT / 2));
+            
             g.DrawImage(bmp[4], new Rectangle(0, 0, game_settings.WIDTH, game_settings.HEIGHT / 2 + (int)character.GetVertAngle()));
+
 
             for (int i = 0; i < ray_points.GetLength(0); i++)
             {

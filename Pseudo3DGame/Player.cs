@@ -12,7 +12,7 @@ namespace Pseudo3DGame
     {
         double x;
         double y;
-        double angle;
+        double hor_angle;
         double vert_angle;
         //Delta time is nodig zodat de movement onafhankelijk is van de fps, en dus ook een afstand berekend wordt sinds de laatste frame.
         double delta_time;
@@ -29,7 +29,7 @@ namespace Pseudo3DGame
             this.setting = game_settings;
             this.map = game_map;
 
-            this.angle = game_settings.PLAYER_ANGLE;
+            this.hor_angle = game_settings.PLAYER_ANGLE;
             this.delta_time = 1;
             this.vert_angle = 0;
 
@@ -66,7 +66,7 @@ namespace Pseudo3DGame
 
         public double GetAngle()
         {
-            return angle;
+            return hor_angle;
         }
 
         public double GetVertAngle()
@@ -74,17 +74,22 @@ namespace Pseudo3DGame
             return vert_angle;
         }
 
+        public double GetHorAngle()
+        {
+            return hor_angle;
+        }
+
         public void Left()
         {
-            double tx = setting.PLAYER_SPEED * Math.Sin(angle) * delta_time;
-            double ty = -setting.PLAYER_SPEED * Math.Cos(angle) * delta_time;
+            double tx = setting.PLAYER_SPEED * Math.Sin(hor_angle) * delta_time;
+            double ty = -setting.PLAYER_SPEED * Math.Cos(hor_angle) * delta_time;
             CheckWallCollision(tx, ty);
         }
 
         public void Right()
         {
-            double tx = -setting.PLAYER_SPEED * Math.Sin(angle) * delta_time;
-            double ty = setting.PLAYER_SPEED * Math.Cos(angle) * delta_time;
+            double tx = -setting.PLAYER_SPEED * Math.Sin(hor_angle) * delta_time;
+            double ty = setting.PLAYER_SPEED * Math.Cos(hor_angle) * delta_time;
             CheckWallCollision(tx, ty);
         }
 
@@ -93,27 +98,27 @@ namespace Pseudo3DGame
             int speed_multiplier = 1;
             if (sprint) speed_multiplier = 4;
 
-            double tx = setting.PLAYER_SPEED * Math.Cos(angle) * delta_time * speed_multiplier;
-            double ty = setting.PLAYER_SPEED * Math.Sin(angle) * delta_time * speed_multiplier;
+            double tx = setting.PLAYER_SPEED * Math.Cos(hor_angle) * delta_time * speed_multiplier;
+            double ty = setting.PLAYER_SPEED * Math.Sin(hor_angle) * delta_time * speed_multiplier;
             CheckWallCollision(tx, ty);
         }
 
         public void Back()
         {
-            double tx = -setting.PLAYER_SPEED * Math.Cos(angle) * delta_time;
-            double ty = -setting.PLAYER_SPEED * Math.Sin(angle) * delta_time;
+            double tx = -setting.PLAYER_SPEED * Math.Cos(hor_angle) * delta_time;
+            double ty = -setting.PLAYER_SPEED * Math.Sin(hor_angle) * delta_time;
             CheckWallCollision(tx, ty);
         }
 
         public void TurnRight()
         {
-            angle += setting.PLAYER_TURNING_SPEED * delta_time;
-            angle %= 360;
+            hor_angle += setting.PLAYER_TURNING_SPEED * delta_time;
+            hor_angle %= 360;
         }
 
         public void RotateLR(float MouseDist)
         {
-            angle -= (setting.PLAYER_TURNING_SPEED * (MouseDist / 500)) % 360;
+            hor_angle -= (setting.PLAYER_TURNING_SPEED * (MouseDist / 500)) % 360;
         }
 
         public void RotateUD(float MouseDist)
@@ -125,7 +130,7 @@ namespace Pseudo3DGame
 
         public void TurnLeft()
         {
-            angle -= (setting.PLAYER_TURNING_SPEED * delta_time) % 360;
+            hor_angle -= (setting.PLAYER_TURNING_SPEED * delta_time) % 360;
         }
 
         public void UpdateDT(double deltaT)
