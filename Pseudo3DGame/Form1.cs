@@ -100,15 +100,10 @@ namespace Pseudo3DGame
             Image tempwall1 = FindImg.FindImg("Textures/wall1");
             Image tempwall2 = FindImg.FindImg("Textures/wall2");
             Image tempwall3 = FindImg.FindImg("Textures/wall3");
-            Image tempFloor = FindImg.FindImg("Textures/Floor");
-            Image tempSky = FindImg.FindImg("Textures/Sky");
 
 
             //Laad de images.
             walls = new PictureEditorToCorrectSize[] { new PictureEditorToCorrectSize(game_settings, tempwall1), new PictureEditorToCorrectSize(game_settings, tempwall2), new PictureEditorToCorrectSize(game_settings, tempwall3) };
-
-            Floor = new PictureEditorToCorrectSize(game_settings, tempFloor);
-            Sky = new PictureEditorToCorrectSize(game_settings, tempSky);
 
             //Maak een game clock: 1 seconde delen door FPS
             clock = new Timer();
@@ -354,7 +349,7 @@ namespace Pseudo3DGame
         } 
         private void Draw3D(Graphics g)
         {
-            Bitmap[] bmp = new Bitmap[] { walls[0].GetBMP(), walls[1].GetBMP(), walls[2].GetBMP(), Floor.GetBMP(), Sky.GetBMP() };
+            Bitmap[] bmp = new Bitmap[] { walls[0].GetBMP(), walls[1].GetBMP(), walls[2].GetBMP() };
             float[,] ray_points = rays.Draw3D();
             double vert_angle = character.GetVertAngle();
 
@@ -362,10 +357,8 @@ namespace Pseudo3DGame
             double sf_offset = 100 * character.GetHorAngle();
 
             //Floor en sky effect
-            g.DrawImage(bmp[3], new Rectangle(-(int)sf_offset, game_settings.HEIGHT / 2, game_settings.WIDTH, game_settings.HEIGHT/2));
-            g.DrawImage(bmp[3], new Rectangle(game_settings.WIDTH - (int)sf_offset, game_settings.HEIGHT / 2, game_settings.WIDTH, game_settings.HEIGHT / 2));
-            
-            g.DrawImage(bmp[4], new Rectangle(0, 0, game_settings.WIDTH, game_settings.HEIGHT / 2 + (int)character.GetVertAngle()));
+            g.FillRectangle(new SolidBrush(Color.DarkGray), new Rectangle(0, game_settings.HEIGHT / 2 + (int)character.GetVertAngle(), game_settings.WIDTH, game_settings.HEIGHT/2 - (int)character.GetVertAngle()));
+            g.FillRectangle(new SolidBrush(Color.Blue), new Rectangle(0, 0, game_settings.WIDTH, game_settings.HEIGHT / 2 + (int)character.GetVertAngle()));
 
 
             for (int i = 0; i < ray_points.GetLength(0); i++)
