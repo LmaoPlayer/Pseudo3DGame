@@ -39,23 +39,22 @@ namespace Pseudo3DGame
         }
         public void CreateStartPos()
         {
-            if (map.IsFinished)
+            if (!map.IsFinished) return;
+
+
+            for (int i = 0; i < map.map.GetLength(0); i++)
             {
-                for (int i = 0; i < map.map.GetLength(0); i++)
+                for (int j = 0; j < map.map.GetLength(1); j++)
                 {
-                    for (int j = 0; j < map.map.GetLength(1); j++)
+                    if (map.map[i, j] == 0)
                     {
-                        if (map.map[i, j] == 0)
-                        {
-                            x = j * setting.PLAYER_MAP_SCALE + setting.PLAYER_MAP_SCALE/2;
-                            y = i * setting.PLAYER_MAP_SCALE + setting.PLAYER_MAP_SCALE/2;
-                            CreateStart.Stop();
-                            CanStartDrawing = true;
-                            return;
-                        }
+                        x = j * setting.PLAYER_MAP_SCALE + setting.PLAYER_MAP_SCALE/2;
+                        y = i * setting.PLAYER_MAP_SCALE + setting.PLAYER_MAP_SCALE/2;
+                        CreateStart.Stop();
+                        CanStartDrawing = true;
+                        return;
                     }
                 }
-
             }
         }
 
