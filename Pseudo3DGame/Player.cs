@@ -124,8 +124,8 @@ namespace Pseudo3DGame
         public void RotateUD(float MouseDist)
         {
             vert_angle += (setting.PLAYER_TURNING_SPEED * MouseDist);
-            if (vert_angle > 9 * setting.HEIGHT) vert_angle = 9 * setting.HEIGHT;
-            if (vert_angle < -9 * setting.HEIGHT) vert_angle = -9 * setting.HEIGHT;
+            if (vert_angle > setting.LOOK_UPDOWN_MINMAX) vert_angle = setting.LOOK_UPDOWN_MINMAX;
+            if (vert_angle < -setting.LOOK_UPDOWN_MINMAX) vert_angle = -setting.LOOK_UPDOWN_MINMAX;
         }
 
         public void TurnLeft()

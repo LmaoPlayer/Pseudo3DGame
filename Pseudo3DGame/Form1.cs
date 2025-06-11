@@ -100,10 +100,15 @@ namespace Pseudo3DGame
             Image tempwall1 = FindImg.FindImg("Textures/wall1");
             Image tempwall2 = FindImg.FindImg("Textures/wall2");
             Image tempwall3 = FindImg.FindImg("Textures/wall3");
+            Image tempsky = FindImg.FindImg("Textures/sky");
+            Image tempfloor = FindImg.FindImg("Textures/floor");
 
 
             //Laad de images.
             walls = new PictureEditorToCorrectSize[] { new PictureEditorToCorrectSize(game_settings, tempwall1), new PictureEditorToCorrectSize(game_settings, tempwall2), new PictureEditorToCorrectSize(game_settings, tempwall3) };
+            Sky = new PictureEditorToCorrectSize(game_settings, tempsky);
+            Floor = new PictureEditorToCorrectSize(game_settings, tempfloor);
+
 
             //Maak een game clock: 1 seconde delen door FPS
             clock = new Timer();
@@ -158,7 +163,7 @@ namespace Pseudo3DGame
                 {
                     string the_item = esc.setting_menu.RPMenu.RPList.CheckedItems[0].ToString();
 
-                    bool[] can_still_find = {true, true, true};
+                    bool[] can_still_find = {true, true, true, true};
 
                     if (Directory.GetFiles($"ResourcePacks/{the_item}").Count() > 0)
                     {
@@ -167,8 +172,9 @@ namespace Pseudo3DGame
                             Match match1 = Regex.Match(item, @"wall1\.");
                             Match match2 = Regex.Match(item, @"wall2\.");
                             Match match3 = Regex.Match(item, @"wall3\.");
+                            Match match4 = Regex.Match(item, @"sky\.");
 
-                            if(match1.Success)
+                            if (match1.Success)
                             {
                                 can_still_find[0] = false;
                                 tempwall1 = FindImg.FindImg($"ResourcePacks/{the_item}\\wall1");
@@ -188,6 +194,13 @@ namespace Pseudo3DGame
                                 tempwall3 = FindImg.FindImg($"ResourcePacks/{the_item}\\wall3");
                             }
                             else if (can_still_find[2]) tempwall3 = FindImg.FindImg("Textures/wall3");
+
+                            if (match4.Success)
+                            {
+                                can_still_find[3] = false;
+                                tempsky = FindImg.FindImg($"ResourcePacks/{the_item}\\sky");
+                            }
+                            else if (can_still_find[3]) tempsky = FindImg.FindImg("Textures/sky");
                         }
                     }
                     else
@@ -195,6 +208,7 @@ namespace Pseudo3DGame
                         tempwall1 = FindImg.FindImg("Textures/wall1");
                         tempwall2 = FindImg.FindImg("Textures/wall2");
                         tempwall3 = FindImg.FindImg("Textures/wall3");
+                        tempsky = FindImg.FindImg("Textures/sky");
                     }
                 }
                 else
@@ -202,9 +216,10 @@ namespace Pseudo3DGame
                     tempwall1 = FindImg.FindImg("Textures/wall1");
                     tempwall2 = FindImg.FindImg("Textures/wall2");
                     tempwall3 = FindImg.FindImg("Textures/wall3");
+                    tempsky = FindImg.FindImg("Textures/sky");
                 }
                 walls = new PictureEditorToCorrectSize[] { new PictureEditorToCorrectSize(game_settings, tempwall1), new PictureEditorToCorrectSize(game_settings, tempwall2), new PictureEditorToCorrectSize(game_settings, tempwall3) };
-
+                Sky = new PictureEditorToCorrectSize(game_settings, tempsky);
                 f.Invalidate();
             };
             esc.setting_menu.map_menu.ApplyMapEvent += (sender, e) =>
@@ -349,18 +364,31 @@ namespace Pseudo3DGame
         } 
         private void Draw3D(Graphics g)
         {
-            Bitmap[] bmp = new Bitmap[] { walls[0].GetBMP(), walls[1].GetBMP(), walls[2].GetBMP() };
-            float[,] ray_points = rays.Draw3D();
+            Bitmap[] bmp = new Bitmap[] { walls[0].GetBMP(), walls[1].GetBMP(), walls[2].GetBMP(), Sky.GetBMP(), Floor.GetBMP() };
             double vert_angle = character.GetVertAngle();
+            double hor_angle = character.GetHorAngle();
 
             //Sky Floor Offset
-            double sf_offset = 100 * character.GetHorAngle();
+            double sky_offset = 100 * character.GetHorAngle();
+            int sky_height = game_settings.HEIGHT / 2 + (int)character.GetVertAngle();
+            int offsetX = (int)(hor_angle * bmp[3].Width/3) % bmp[3].Width;
+
+
+            Rectangle temp_rect = new Rectangle((int)(Math.Min(bmp[3].Width - offsetX, bmp[3].Width) * (game_settings.WIDTH / (double)bmp[3].Width)), (int)character.GetVertAngle() - game_settings.HEIGHT / 2, game_settings.WIDTH + 5, game_settings.HEIGHT);
+            Rectangle temp_rect2 = new Rectangle((int)(Math.Min(bmp[3].Width - offsetX - bmp[3].Width, bmp[3].Width) * (game_settings.WIDTH / (double)bmp[3].Width)), (int)character.GetVertAngle() - game_settings.HEIGHT / 2, game_settings.WIDTH + 5, game_settings.HEIGHT);
+
 
             //Floor en sky effect
-            g.FillRectangle(new SolidBrush(Color.DarkGray), new Rectangle(0, game_settings.HEIGHT / 2 + (int)character.GetVertAngle(), game_settings.WIDTH, game_settings.HEIGHT/2 - (int)character.GetVertAngle()));
-            g.FillRectangle(new SolidBrush(Color.Blue), new Rectangle(0, 0, game_settings.WIDTH, game_settings.HEIGHT / 2 + (int)character.GetVertAngle()));
+            g.FillRectangle(new SolidBrush(Color.Firebrick), new Rectangle(0, game_settings.HEIGHT / 2 + (int)character.GetVertAngle(), game_settings.WIDTH, game_settings.HEIGHT/2 - (int)character.GetVertAngle()));
+            g.DrawImage(bmp[3], temp_rect);
+            g.DrawImage(bmp[3], temp_rect2);
 
 
+
+
+
+
+            float[,] ray_points = rays.Draw3D();
             for (int i = 0; i < ray_points.GetLength(0); i++)
             {
                 //Fog effect

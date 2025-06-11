@@ -49,6 +49,8 @@ namespace Pseudo3DGame
         
         public int TEXTURE_SIZE { get; }
 
+        public int LOOK_UPDOWN_MINMAX { get; }
+
         public Settings(int width, int height)
         {
             this.FPS = 60;
@@ -87,6 +89,7 @@ namespace Pseudo3DGame
 
             this.TEXTURE_SIZE = 256;
             //this.MINIMUM_WALL_PLAYER_DISTANCE = PLAYER_MAP_SCALE / 6;
+            this.LOOK_UPDOWN_MINMAX = HEIGHT/2;
         }
 
 
