@@ -368,20 +368,23 @@ namespace Pseudo3DGame
             double vert_angle = character.GetVertAngle();
             double hor_angle = character.GetHorAngle();
 
-            //Sky Floor Offset
-            double sky_offset = 100 * character.GetHorAngle();
-            int sky_height = game_settings.HEIGHT / 2 + (int)character.GetVertAngle();
+
             int offsetX = (int)(hor_angle * bmp[3].Width/3) % bmp[3].Width;
+            Rectangle temp_rect = new Rectangle((int)((bmp[3].Width - offsetX) * (game_settings.WIDTH / (double)bmp[3].Width)), (int)character.GetVertAngle() - game_settings.HEIGHT / 2, game_settings.WIDTH + 5, game_settings.HEIGHT);
+            Rectangle temp_rect2 = new Rectangle((int)((bmp[3].Width - offsetX - bmp[3].Width) * (game_settings.WIDTH / (double)bmp[3].Width)), (int)character.GetVertAngle() - game_settings.HEIGHT / 2, game_settings.WIDTH + 5, game_settings.HEIGHT);
 
 
-            Rectangle temp_rect = new Rectangle((int)(Math.Min(bmp[3].Width - offsetX, bmp[3].Width) * (game_settings.WIDTH / (double)bmp[3].Width)), (int)character.GetVertAngle() - game_settings.HEIGHT / 2, game_settings.WIDTH + 5, game_settings.HEIGHT);
-            Rectangle temp_rect2 = new Rectangle((int)(Math.Min(bmp[3].Width - offsetX - bmp[3].Width, bmp[3].Width) * (game_settings.WIDTH / (double)bmp[3].Width)), (int)character.GetVertAngle() - game_settings.HEIGHT / 2, game_settings.WIDTH + 5, game_settings.HEIGHT);
-
+            //int floor_offsetX = (int)(hor_angle * bmp[4].Width) % bmp[4].Width;
+            //Rectangle floor_temp_rect = new Rectangle((int)(Math.Min(bmp[4].Width - floor_offsetX, bmp[4].Width) * (game_settings.WIDTH / (double)bmp[4].Width)), (int)character.GetVertAngle() + game_settings.HEIGHT / 2, game_settings.WIDTH + 5, game_settings.HEIGHT);
+            //Rectangle floor_temp_rect2 = new Rectangle((int)(Math.Min(bmp[4].Width - floor_offsetX - bmp[4].Width, bmp[4].Width) * (game_settings.WIDTH / (double)bmp[4].Width)), (int)character.GetVertAngle() + game_settings.HEIGHT / 2, game_settings.WIDTH + 5, game_settings.HEIGHT);
 
             //Floor en sky effect
             g.FillRectangle(new SolidBrush(Color.Firebrick), new Rectangle(0, game_settings.HEIGHT / 2 + (int)character.GetVertAngle(), game_settings.WIDTH, game_settings.HEIGHT/2 - (int)character.GetVertAngle()));
             g.DrawImage(bmp[3], temp_rect);
             g.DrawImage(bmp[3], temp_rect2);
+
+            //g.DrawImage(bmp[4], floor_temp_rect);
+            //g.DrawImage(bmp[4], floor_temp_rect2);
 
 
 
@@ -440,8 +443,14 @@ namespace Pseudo3DGame
                 if (pressed_keys.Contains(Keys.D)) character.Right();
                 if (pressed_keys.Contains(Keys.Z))
                 {
-                    if (pressed_keys.Contains(Keys.ControlKey)) character.Forward(true);
-                    else character.Forward(false);
+                    if (pressed_keys.Contains(Keys.ControlKey))
+                    {
+                        character.Forward(true);
+                    }
+                    else
+                    {
+                        character.Forward(false);
+                    }
                 }
                 if (pressed_keys.Contains(Keys.S)) character.Back();
                 if (pressed_keys.Contains(Keys.Right)) character.TurnRight();
