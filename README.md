@@ -1,5 +1,5 @@
 # Pseudo 3D Game
->This project was heavily inspired by [Coder Space's Doom Wolfenstein tutorial](https://www.youtube.com/watch?v=ECqUrT7IdqQ).
+>This project was heavily inspired by [Coder Space's Doom Wolfenstein](https://www.youtube.com/watch?v=ECqUrT7IdqQ).
 
 ## What
 This is a project that will not end up being a finished game. It is simply a sandbox/simulation game made for experimentational purposes in .NET's form application framework and that was originally for a school project. The current features are:
