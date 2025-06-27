@@ -288,7 +288,7 @@ namespace Pseudo3DGame
             if (dialog == 1) Draw3D(g);
             else Draw2D(g, P, RayPen);
 
-            //Draw an annoying hair
+            //Draw an annoying hair (Yeah, this is the easter egg...)
             if (EnableHair) g.DrawBezier(new Pen(Color.Black), new Point(200, 200), new Point(210, 200), new Point(210, 210), new Point(210, 230));
 
             BG.Dispose();
@@ -363,14 +363,47 @@ namespace Pseudo3DGame
 
                 //Teken de rechthoeken op de plaatsen waar de raycasts uitkomen
                 //g.FillRectangle(B, ray_points[i, 0], ray_points[i, 1]+(float)vert_angle, ray_points[i, 2], ray_points[i, 3]);
-                int sliceX = Math.Min((int)(ray_points[i, 5] * game_settings.TEXTURE_SIZE), game_settings.TEXTURE_SIZE - (int)ray_points[i, 2]);
+                int textureIndex = (int)ray_points[i, 6];
+                int sliceWidth = (int)ray_points[i, 2];
+                int fullHeight = bmp[textureIndex].Height;
 
-                int sliceY = 0;
 
-                Bitmap SavedWallPiece = bmp[(int)ray_points[i, 6]].Clone(new Rectangle(sliceX, sliceY, (int)ray_points[i, 2], bmp[(int)ray_points[i, 6]].Height), bmp[(int)ray_points[i, 6]].PixelFormat);
-                //Bitmap SavedWallPiece = bmp[0].Clone(new Rectangle(sliceX, sliceY, (int)ray_points[i, 2], bmp[0].Height), bmp[0].PixelFormat);
-                g.DrawImage(SavedWallPiece, new RectangleF(ray_points[i, 0], ray_points[i, 1] + (float)vert_angle, ray_points[i, 2], ray_points[i, 3]));
-                //B.Dispose();
+                int sliceX = Math.Min((int)(ray_points[i, 5] * game_settings.TEXTURE_SIZE), game_settings.TEXTURE_SIZE - sliceWidth);
+
+                float wallScreenY = ray_points[i, 1] + (float)vert_angle;
+                float wallHeightOnScreen = ray_points[i, 3];
+
+
+                float RescaleImgUp = 0;
+                float RescaleViewUp = 0;
+
+                if (wallScreenY < 0)
+                {
+                    RescaleViewUp = -wallScreenY;
+                    RescaleImgUp = RescaleViewUp * fullHeight / wallHeightOnScreen;
+
+                    
+                    if (RescaleImgUp > fullHeight) RescaleImgUp = fullHeight;
+                    if (RescaleViewUp > wallHeightOnScreen) RescaleViewUp = wallHeightOnScreen;
+                }
+
+                int sliceY = (int)RescaleImgUp;
+                int srcHeight = fullHeight - sliceY;
+                float dstHeight = wallHeightOnScreen - RescaleViewUp;
+
+                if (sliceY < 0) sliceY = 0;
+                if (srcHeight < 1) srcHeight = 1;
+                if (dstHeight < 1) dstHeight = 1;
+
+
+
+                Bitmap SavedWallPiece = bmp[textureIndex].Clone(
+                    new Rectangle(sliceX, sliceY, sliceWidth, srcHeight),
+                    bmp[textureIndex].PixelFormat);
+
+                g.DrawImage(
+                    SavedWallPiece,
+                    new RectangleF(ray_points[i, 0], wallScreenY + RescaleViewUp, sliceWidth, dstHeight));
             }
 
             using (Pen p = new Pen(Color.Gray))
