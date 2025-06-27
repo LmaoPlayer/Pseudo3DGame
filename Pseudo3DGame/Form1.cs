@@ -26,6 +26,7 @@ namespace Pseudo3DGame
 {
     public partial class Form1 : Form
     {
+        
 
         Timer clock;
 
@@ -97,17 +98,14 @@ namespace Pseudo3DGame
             //this.Location = new Point((Screen.PrimaryScreen.Bounds.Width-this.Width)/2, (Screen.PrimaryScreen.Bounds.Height - this.Height) / 2);
 
             //Test met meerdere achtervoegsels
-            Image tempwall1 = FindImg.FindImg("Textures/wall1");
-            Image tempwall2 = FindImg.FindImg("Textures/wall2");
-            Image tempwall3 = FindImg.FindImg("Textures/wall3");
-            Image tempsky = FindImg.FindImg("Textures/sky");
-            Image tempfloor = FindImg.FindImg("Textures/floor");
+            Image[] TempImages = game_settings.ALL_TEXTURES.Select(texture => FindImg.FindImg($"Textures/{texture}")).ToArray();
+
+            //Image tempfloor = FindImg.FindImg("Textures/floor");
 
 
             //Laad de images.
-            walls = new PictureEditorToCorrectSize[] { new PictureEditorToCorrectSize(game_settings, tempwall1), new PictureEditorToCorrectSize(game_settings, tempwall2), new PictureEditorToCorrectSize(game_settings, tempwall3) };
-            Sky = new PictureEditorToCorrectSize(game_settings, tempsky);
-            Floor = new PictureEditorToCorrectSize(game_settings, tempfloor);
+            ImageFixer(TempImages);
+            //Floor = new PictureEditorToCorrectSize(game_settings, tempfloor);
 
 
             //Maak een game clock: 1 seconde delen door FPS
@@ -163,63 +161,27 @@ namespace Pseudo3DGame
                 {
                     string the_item = esc.setting_menu.RPMenu.RPList.CheckedItems[0].ToString();
 
-                    bool[] can_still_find = {true, true, true, true};
+                    bool[] can_still_find = Enumerable.Repeat(true, game_settings.ALL_TEXTURES.Length).ToArray();
 
-                    if (Directory.GetFiles($"ResourcePacks/{the_item}").Count() > 0)
+                    foreach (string item in Directory.GetFiles($"ResourcePacks/{the_item}"))
                     {
-                        foreach (string item in Directory.GetFiles($"ResourcePacks/{the_item}"))
+                        for (int i = 0; i < game_settings.ALL_TEXTURES.Length; i++)
                         {
-                            Match match1 = Regex.Match(item, @"wall1\.");
-                            Match match2 = Regex.Match(item, @"wall2\.");
-                            Match match3 = Regex.Match(item, @"wall3\.");
-                            Match match4 = Regex.Match(item, @"sky\.");
-
-                            if (match1.Success)
+                            Match match = Regex.Match(item, $@"{game_settings.ALL_TEXTURES[i]}\.");
+                            if (match.Success)
                             {
-                                can_still_find[0] = false;
-                                tempwall1 = FindImg.FindImg($"ResourcePacks/{the_item}\\wall1");
+                                can_still_find[i] = false;
+                                TempImages[i] = FindImg.FindImg($"ResourcePacks/{the_item}\\{game_settings.ALL_TEXTURES[i]}");
                             }
-                            else if (can_still_find[0]) tempwall1 = FindImg.FindImg("Textures/wall1");
-
-                            if (match2.Success)
-                            {
-                                can_still_find[1] = false;
-                                tempwall2 = FindImg.FindImg($"ResourcePacks/{the_item}\\wall2");
-                            }
-                            else if (can_still_find[1]) tempwall2 = FindImg.FindImg("Textures/wall2");
-
-                            if (match3.Success)
-                            {
-                                can_still_find[2] = false;
-                                tempwall3 = FindImg.FindImg($"ResourcePacks/{the_item}\\wall3");
-                            }
-                            else if (can_still_find[2]) tempwall3 = FindImg.FindImg("Textures/wall3");
-
-                            if (match4.Success)
-                            {
-                                can_still_find[3] = false;
-                                tempsky = FindImg.FindImg($"ResourcePacks/{the_item}\\sky");
-                            }
-                            else if (can_still_find[3]) tempsky = FindImg.FindImg("Textures/sky");
+                            else if (can_still_find[i]) TempImages[i] = FindImg.FindImg($"Textures/{game_settings.ALL_TEXTURES[i]}");
                         }
-                    }
-                    else
-                    {
-                        tempwall1 = FindImg.FindImg("Textures/wall1");
-                        tempwall2 = FindImg.FindImg("Textures/wall2");
-                        tempwall3 = FindImg.FindImg("Textures/wall3");
-                        tempsky = FindImg.FindImg("Textures/sky");
                     }
                 }
                 else
                 {
-                    tempwall1 = FindImg.FindImg("Textures/wall1");
-                    tempwall2 = FindImg.FindImg("Textures/wall2");
-                    tempwall3 = FindImg.FindImg("Textures/wall3");
-                    tempsky = FindImg.FindImg("Textures/sky");
+                    TempImages = game_settings.ALL_TEXTURES.Select(texture => FindImg.FindImg($"Textures/{texture}")).ToArray();
                 }
-                walls = new PictureEditorToCorrectSize[] { new PictureEditorToCorrectSize(game_settings, tempwall1), new PictureEditorToCorrectSize(game_settings, tempwall2), new PictureEditorToCorrectSize(game_settings, tempwall3) };
-                Sky = new PictureEditorToCorrectSize(game_settings, tempsky);
+                ImageFixer(TempImages);
                 f.Invalidate();
             };
             esc.setting_menu.map_menu.ApplyMapEvent += (sender, e) =>
@@ -364,7 +326,7 @@ namespace Pseudo3DGame
         } 
         private void Draw3D(Graphics g)
         {
-            Bitmap[] bmp = new Bitmap[] { walls[0].GetBMP(), walls[1].GetBMP(), walls[2].GetBMP(), Sky.GetBMP(), Floor.GetBMP() };
+            Bitmap[] bmp = new Bitmap[] { walls[0].GetBMP(), walls[1].GetBMP(), walls[2].GetBMP(), Sky.GetBMP()};
             double vert_angle = character.GetVertAngle();
             double hor_angle = character.GetHorAngle();
 
@@ -523,6 +485,11 @@ namespace Pseudo3DGame
                 Cursor.Show();
                 MouseVisible = true;
             }
+        }
+        private void ImageFixer(Image[] TempImages)
+        {
+            walls = new PictureEditorToCorrectSize[] { new PictureEditorToCorrectSize(game_settings, TempImages[0]), new PictureEditorToCorrectSize(game_settings, TempImages[1]), new PictureEditorToCorrectSize(game_settings, TempImages[2]) };
+            Sky = new PictureEditorToCorrectSize(game_settings, TempImages[3]);
         }
     }
 }
