@@ -354,15 +354,22 @@ namespace Pseudo3DGame
 
 
             float[,] ray_points = rays.Draw3D();
+
+            int FogR = bmp[3].GetPixel(bmp[3].Width - 1, bmp[3].Height - 1).R;
+            int FogB = bmp[3].GetPixel(bmp[3].Width - 1, bmp[3].Height - 1).B;
+            int FogG = bmp[3].GetPixel(bmp[3].Width - 1, bmp[3].Height - 1).G;
+
             for (int i = 0; i < ray_points.GetLength(0); i++)
             {
                 //Fog effect
-                //int Col = Math.Abs((int)((Math.Pow(ray_points[i, 4], 5) / 255)*0.2F));
-                //if (Col > 255) Col = 255;
-                //Brush B = new SolidBrush(Color.FromArgb(Col, Col, Col));
+                int Col = Math.Abs((int)((Math.Pow(ray_points[i, 4], 5.5) / 255)*0.2F));
+                if (Col > 255) Col = 255;
+                //Col = (255 - Col) % 255;
+                
+                Brush B = new SolidBrush(Color.FromArgb(Col, FogR, FogG, FogB));
 
                 //Teken de rechthoeken op de plaatsen waar de raycasts uitkomen
-                //g.FillRectangle(B, ray_points[i, 0], ray_points[i, 1]+(float)vert_angle, ray_points[i, 2], ray_points[i, 3]);
+                
                 int textureIndex = (int)ray_points[i, 6];
                 int sliceWidth = (int)ray_points[i, 2];
                 int fullHeight = bmp[textureIndex].Height;
@@ -404,6 +411,8 @@ namespace Pseudo3DGame
                 g.DrawImage(
                     SavedWallPiece,
                     new RectangleF(ray_points[i, 0], wallScreenY + RescaleViewUp, sliceWidth, dstHeight));
+
+                g.FillRectangle(B, ray_points[i, 0], ray_points[i, 1] + (float)vert_angle, ray_points[i, 2], ray_points[i, 3]);
             }
 
             using (Pen p = new Pen(Color.Gray))
