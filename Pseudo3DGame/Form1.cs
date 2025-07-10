@@ -355,9 +355,9 @@ namespace Pseudo3DGame
 
             float[,] ray_points = rays.Draw3D();
 
-            int FogR = bmp[3].GetPixel(bmp[3].Width - 1, bmp[3].Height - 1).R;
-            int FogB = bmp[3].GetPixel(bmp[3].Width - 1, bmp[3].Height - 1).B;
-            int FogG = bmp[3].GetPixel(bmp[3].Width - 1, bmp[3].Height - 1).G;
+            int FogR = bmp[3].GetPixel((int)(bmp[3].Width / game_settings.PIXEL_SELECTION), (int)(bmp[3].Height / game_settings.PIXEL_SELECTION)).R;
+            int FogB = bmp[3].GetPixel((int)(bmp[3].Width / game_settings.PIXEL_SELECTION), (int)(bmp[3].Height / game_settings.PIXEL_SELECTION)).B;
+            int FogG = bmp[3].GetPixel((int)(bmp[3].Width / game_settings.PIXEL_SELECTION), (int)(bmp[3].Height / game_settings.PIXEL_SELECTION)).G;
 
             for (int i = 0; i < ray_points.GetLength(0); i++)
             {

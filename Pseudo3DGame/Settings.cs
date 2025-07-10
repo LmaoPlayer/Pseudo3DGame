@@ -48,6 +48,7 @@ namespace Pseudo3DGame
         public double WALL_SCALE { get; }
         
         public int TEXTURE_SIZE { get; }
+        public float PIXEL_SELECTION { get; }
 
         public int LOOK_UPDOWN_MINMAX { get; }
 
@@ -92,6 +93,9 @@ namespace Pseudo3DGame
             //this.MINIMUM_WALL_PLAYER_DISTANCE = PLAYER_MAP_SCALE / 6;
             this.LOOK_UPDOWN_MINMAX = HEIGHT/2;
             this.ALL_TEXTURES = new string[]{ "wall1", "wall2", "wall3", "sky" };
+
+            //Gebruikt om skybox te nemen en te delen door x: bepaald het kleur van de fog.
+            this.PIXEL_SELECTION = 1.5F;
         }
 
 

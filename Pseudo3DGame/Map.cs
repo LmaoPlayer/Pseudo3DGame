@@ -89,10 +89,11 @@ namespace Pseudo3DGame
             char SplitOn = ',';
             if (map_to_use[0].Contains(";")) SplitOn = ';';
             else if (map_to_use[0].Contains("/")) SplitOn = '/';
-            if (map_to_use[0].Contains("\\")) SplitOn = '\\';
+            else if (map_to_use[0].Contains("\\")) SplitOn = '\\';
+            else if (map_to_use[0].Contains(".")) SplitOn = '.';
 
 
-            for (int i = 1; i < map_to_use.GetLength(0); i++)
+            for (int i = 1; i < map_to_use.GetLength(0)+1; i++)
             {
                 string[] rowSTRListNeg1;
                 string[] rowSTRList0;
@@ -101,13 +102,13 @@ namespace Pseudo3DGame
                 
 
 
-                if (i > 1 && i < map_to_use.GetLength(0)) rowSTRListNeg1 = map_to_use[i - 2].Split(SplitOn);
+                if (i > 1 && i < map_to_use.GetLength(0)-1) rowSTRListNeg1 = map_to_use[i - 2].Split(SplitOn);
                 else rowSTRListNeg1 = new string[0];
 
-                if (i != 0 && i != map_to_use.GetLength(0) - 1) rowSTRList0 = map_to_use[i - 1].Split(SplitOn);
+                if (i != 0 && i != map_to_use.GetLength(0)) rowSTRList0 = map_to_use[i - 1].Split(SplitOn);
                 else rowSTRList0 = new string[0];
 
-                if (i < map_to_use.GetLength(0) - 2) rowSTRList1 = map_to_use[i].Split(SplitOn);
+                if (i < map_to_use.GetLength(0) - 1) rowSTRList1 = map_to_use[i].Split(SplitOn);
                 else rowSTRList1 = new string[0];
 
 
@@ -124,7 +125,7 @@ namespace Pseudo3DGame
                     {
                         if (int.TryParse(rowSTRList0[j], out temp))
                         {
-                            if ((i == 1 || j == 0 || i == map_to_use.GetLength(0) || j == Math.Max(Math.Max(rowSTRList1.Length, rowSTRList0.Length), rowSTRListNeg1.Length)) && temp == 0) temp_row.Add(1);
+                            if ((i == 0 || j == 0 || i == map_to_use.GetLength(0)|| j == Math.Max(Math.Max(rowSTRList1.Length, rowSTRList0.Length), rowSTRListNeg1.Length)) && temp == 0) temp_row.Add(1);
                             else temp_row.Add(temp);
                         }
                         else temp_row.Add(1);
